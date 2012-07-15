@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <g:HorizontalPanel>
+            <g:Button ui:field="homeButton" text="Home"/>
+            <g:Button ui:field="contactsButton" text="Contacts"/>
+            <g:Button ui:field="settingsButton" text="Settings"/>
+            <g:Button ui:field="supportButton" text="Support"/>
+        </g:HorizontalPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

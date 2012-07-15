@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="AppEngine Test Suite">
+    <CLASSES>
+      <root url="jar://C:/JavaLibs/appengine-java-sdk-1.6.5/lib/testing/appengine-testing.jar!/" />
+      <root url="jar://C:/JavaLibs/appengine-java-sdk-1.6.5/lib/appengine-tools-api.jar!/" />
+      <root url="jar://C:/JavaLibs/appengine-java-sdk-1.6.5/lib/impl/appengine-local-runtime.jar!/" />
+      <root url="jar://C:/JavaLibs/appengine-java-sdk-1.6.5/lib/impl/appengine-api-labs.jar!/" />
+      <root url="jar://C:/JavaLibs/appengine-java-sdk-1.6.5/lib/impl/appengine-api-stubs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

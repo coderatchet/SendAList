@@ -1,0 +1,60 @@
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    font-size: small;
+    margin: 8px;
+}
+
+.div-main {
+    padding: 3em;
+    border: WindowFrame;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 44.133em;
+    height: 31.613em;
+    margin-top: -15.8065em;
+    margin-left: -22.0665em;
+    background-color: white;
+    overflow: visible;
+}
+
+.mainmain {
+    padding: 3em;
+    border: WindowFrame;
+    position: fixed;
+    width: 98em;
+    height: 33em;
+    margin-top: -15.8065em;
+    margin-left: -22.0665em;
+    background-color: #e0ffff;
+}
+
+.p-signin-message {
+    color: Navy;
+    font-size: 18px;
+    font-style: normal;
+    font-family: "arial", arial, sans-serif;
+    font-weight: bold;
+}
+
+/* list view */
+
+.gwt-textBox-addTaskBox_typing {
+    color: black;
+    font-family: monospace;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.gwt-textBox-addTaskBox {
+    color: #d3d3d3;
+    font-family: monospace;
+    font-size: 1em;
+}
+
+.side {
+    width: 30em;
+    height: 30em;
+}

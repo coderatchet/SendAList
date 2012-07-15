@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <g:HorizontalPanel>
+            <g:Image ui:field="logoImage" url="/resources/images/green_man.png"/>
+        <g:Label ui:field="welcomeLabel" horizontalAlignment="ALIGN_RIGHT" />
+
+        </g:HorizontalPanel>
+        <g:DockLayoutPanel unit='EM' ui:field="dockLayoutPanel">
+            <g:north size='4'>
+                <g:HorizontalPanel ui:field="head">
+                    <g:SimplePanel ui:field="top"/>
+                </g:HorizontalPanel>
+            </g:north>
+
+            <g:west size='16'>
+                <g:SimplePanel ui:field="side"/>
+            </g:west>
+
+            <g:center>
+                <g:ScrollPanel ui:field="main"/>
+            </g:center>
+        </g:DockLayoutPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>
