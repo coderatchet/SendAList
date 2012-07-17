@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="AppEngine ORM">
+    <CLASSES>
+      <root url="file://C:/JavaLibs/appengine-java-sdk-1.7.0/lib/user/orm" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://C:/JavaLibs/appengine-java-sdk-1.7.0/src/orm" />
+    </SOURCES>
+    <jarDirectory url="file://C:/JavaLibs/appengine-java-sdk-1.7.0/lib/user/orm" recursive="false" />
+    <jarDirectory url="file://C:/JavaLibs/appengine-java-sdk-1.7.0/src/orm" recursive="false" type="SOURCES" />
+  </library>
+</component>

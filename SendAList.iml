@@ -3,15 +3,10 @@
   <component name="FacetManager">
     <facet type="gwt" name="GWT">
       <configuration>
+        <setting name="compilerMaxHeapSize" value="256" />
+        <setting name="gwtScriptOutputStyle" value="DETAILED" />
         <setting name="gwtSdkUrl" value="file://C:/JavaLibs/gwt-2.4.0" />
-      </configuration>
-    </facet>
-    <facet type="jpa" name="JPA">
-      <configuration>
-        <setting name="validation-enabled" value="true" />
-        <setting name="provider-name" value="" />
-        <datasource-mapping />
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/META-INF/persistence.xml" />
+        <setting name="webFacet" value="Web" />
       </configuration>
     </facet>
     <facet type="web" name="Web">
@@ -25,7 +20,13 @@
       </configuration>
       <facet type="google-app-engine" name="Google App Engine">
         <configuration>
-          <sdk-home-path>C:/JavaLibs/appengine-java-sdk-1.6.5</sdk-home-path>
+          <password>dfc7df9bdfc9dfc2dfcbdf9bdfcbdfc2</password>
+          <files-to-enhance>
+            <file path="$MODULE_DIR$/src" />
+          </files-to-enhance>
+          <persistence-api>JPA</persistence-api>
+          <sdk-home-path>C:/JavaLibs/appengine-java-sdk-1.7.0</sdk-home-path>
+          <email>jarednagle@gmail.com</email>
         </configuration>
       </facet>
     </facet>
@@ -37,8 +38,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="gwt-user" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="gwt-user" level="project" />
+    <orderEntry type="library" name="AppEngine ORM" level="project" />
+    <orderEntry type="library" name="AppEngine API" level="project" />
+    <orderEntry type="library" name="AppEngine Test Suite" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/JavaLibs/junit4.8.2/junit-4.8.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="junit" level="project" />
   </component>
 </module>
 
