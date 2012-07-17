@@ -33,7 +33,6 @@ public class UserAccount implements Account, ToJson, Processable {
         testUser.setLastName("man");
         testUser.setDisplayName("test");
         testUser.setPhotoUrl("/test");
-        testUser.setIsFederated(true);
     }
 
     @Id
@@ -50,6 +49,7 @@ public class UserAccount implements Account, ToJson, Processable {
     String encryptedPassword;
     @Unindexed
     String ps;
+    private static final String DEL = "del";
 
     /**
      * sets the last name of the user
@@ -70,17 +70,6 @@ public class UserAccount implements Account, ToJson, Processable {
      */
     public UserAccount setFirstName(String firstName) {
         this.firstName = firstName;
-        return this;
-    }
-
-    /**
-     * sets whether this account is a federated account or not
-     *
-     * @param isFederated whether this account is federated or not
-     * @return this UserAccount, daisy chain style
-     */
-    public UserAccount setIsFederated(boolean isFederated) {
-        this.isFederated = isFederated;
         return this;
     }
 
@@ -130,15 +119,21 @@ public class UserAccount implements Account, ToJson, Processable {
 
     /**
      * sets the password used for this account, also hashes it with a randomly generated salt that is stored along side
-     * the password
+     * the password. to delete the password (for changing from legacy to federated account) set the password to
+     * "{@value #DEL}"
      *
      * @param plainText the plain text password to set
      * @return this UserAccount, daisy chain style
      */
-    public UserAccount setPassword(String plainText) {
-        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-        if (ps == null) ps = Globals.generateRandomToken(SALT_LENGTH);
-        encryptedPassword = passwordEncryptor.encryptPassword(getPS() + plainText);
+    public UserAccount setPassword(@NotNull String plainText) {
+        if (plainText.equals(DEL)) {
+            this.encryptedPassword = null;
+        }
+        else{
+            BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+            if (ps == null) ps = Globals.generateRandomToken(SALT_LENGTH);
+            encryptedPassword = passwordEncryptor.encryptPassword(getPS() + plainText);
+        }
         return this;
     }
 
@@ -159,17 +154,16 @@ public class UserAccount implements Account, ToJson, Processable {
     }
 
     List<Key<TaskList>> taskLists = null;
-    boolean isFederated;
 
 
     /**
-     * returns whether this account is a federated one or not
+     * returns whether this account is a federated one or not. the function checks whether the password field is null.
      *
      * @return true if is federated, false if not
      */
     @Override
     public boolean isFederated() {
-        return isFederated;
+        return this.encryptedPassword == null;
     }
 
     /**
@@ -405,5 +399,13 @@ public class UserAccount implements Account, ToJson, Processable {
     @Override
     public String processTransaction(JsonObject tx) {
         return null; //todo implement
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isSafeToPersist() {
+        return true;
+        //todo implement
     }
 }

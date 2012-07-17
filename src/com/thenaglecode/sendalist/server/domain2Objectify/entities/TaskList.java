@@ -1,12 +1,17 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
+import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
+import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -132,8 +137,78 @@ public class TaskList implements Processable {
         return sb.toString();
     }
 
+    private final String VALUE_PARSE_PROBLEM = "problem translating the value";
+
+    /**
+     *
+     * */
     @Override
-    public String processTransaction(JsonObject tx) {
+    public String processTransaction(@NotNull JsonObject tx) {
+        SendAListDAO dao = new SendAListDAO();
+        boolean changed = false;
+
+        for(Map.Entry<String, JsonElement> entry : tx.entrySet()) {
+            String key = entry.getKey();
+            JsonElement value = entry.getValue();
+            boolean couldNotParse = false;
+            String valueAsString = null;
+            try {
+                valueAsString = entry.getValue().getAsString();
+            }
+            catch (ClassCastException e){
+                couldNotParse = true;
+            }
+
+            if("c".equals(key) && "i".equals(key)){
+                //do nothing
+            } else if("summary".equals(key)) {
+                if(couldNotParse) return VALUE_PARSE_PROBLEM;
+                else if(!summary.equals(valueAsString)){
+                    changed = true;
+                    setSummary(valueAsString);
+                }
+            } else if("owner".equals(key)){
+                if(couldNotParse) return VALUE_PARSE_PROBLEM;
+                Key existingKey = getOwner();
+                UserAccount found = dao.findUser(valueAsString);
+                if(found == null) return "User is not in the database: " + valueAsString;
+                if(!existingKey.getName().equals(valueAsString)) {
+                    changed = true;
+                    Key<UserAccount> newKey = new Key<UserAccount>(UserAccount.class, valueAsString);
+                    setOwner(newKey);
+                }
+            } else if("task".equals(key)){
+                JsonObject obj = value.getAsJsonObject();
+                Task newTask = new Task();
+                newTask.processTransaction(obj);
+                boolean found = false;
+                Set<Task> tasks = getTasks();
+                Iterator<Task> itr = tasks.iterator();
+
+                for(Task task : tasks){
+                    if(task.getId().equals(newTask.getId())){
+                        found = true;
+                    }
+                }
+            }
+        }
+
+        if(!changed) return RequestProcessor.Nop;
         return null; //todo implement
+    }
+
+    private void processDeleteTransaction() {
+        //todo implement
+    }
+
+    /** {@inheritDoc} */
+    public boolean isSafeToPersist() {
+        boolean isSafe = summary != null && owner != null;
+        if(_tasks != null){
+            for(Task task : _tasks){
+                if(isSafe) isSafe = task.isSafeToPersist();
+            }
+        }
+        return isSafe;
     }
 }

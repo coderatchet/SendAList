@@ -83,6 +83,7 @@ public class Task implements Processable, Comparable<Task> {
         return null; //todo implement
     }
 
+    /** {@inheritDoc} */
     public boolean isSafeToPersist() {
         return summary != null;
     }

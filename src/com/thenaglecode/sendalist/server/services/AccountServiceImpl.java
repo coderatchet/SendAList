@@ -54,9 +54,10 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 user.setPhotoUrl("http://www.google.com/uds/modules/identitytoolkit/image/nophoto.png");
             }
-            user.setIsFederated(true);
             SendAListDAO dao = new SendAListDAO();
-            dao.saveUser(user);
+            if(user.isSafeToPersist())
+                dao.saveUser(user);
+            else return null;
             return user;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -86,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
             if (false) /*todo if context is not the user, then...*/ {
                 throw new AccountException(AccountException.ACTION_NOT_ALLOWED);
             } else {
-                user.setIsFederated(true);
+                user.setPassword(null);
             }
     }
 }

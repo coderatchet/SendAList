@@ -14,17 +14,20 @@ import javax.servlet.http.HttpServletRequest;
  * Date: 14/07/12
  * Time: 6:05 PM
  */
-public abstract class OriginatorOfPersistentChange {
+public class OriginatorOfPersistentChange {
     String ip;
     UserAccount user;
 
 
     OriginatorOfPersistentChange(HttpServletRequest req) {
         ip = req.getRemoteAddr();
-        user = getUser(req);
     }
 
-    private UserAccount getUser(HttpServletRequest req) {
+    private UserAccount getUserAccount() {
+        return user;
+    }
+
+    public static OriginatorOfPersistentChange getContext(HttpServletRequest req) {
         return null; //todo implement
     }
 }

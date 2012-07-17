@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
+import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,20 +41,44 @@ public class RequestProcessor {
         if (i == null) return "Could not read the id";
         if (i.equals("new")) isNew = true;
 
-        if ("TASKLIST".equals(c)) {
+        String err = null;
+        if ("LIST".equals(c)) {
             TaskList taskList;
             if (isNew) {
-                //noinspection UnusedAssignment //todo delete this line when done
                 taskList = new TaskList();
             } else {
-                //noinspection UnusedAssignment //todo delete this line when done
                 taskList = dao.findTaskList(id);
+                if(taskList == null){
+                    return "Could not find TaskList with id: " + id;
+                }
             }
-            //todo finish tasklist processing
+            err = taskList.processTransaction(tx);
+            if (!returnedError(err) && !Nop.equals(err)) {
+                if(!taskList.isSafeToPersist()){
+                    return "Task list did not have enough information to save correctly";
+                }
+                dao.saveTaskList(taskList);
+            }
         } else if ("USER".equals(c)) {
-            //todo finish user processing
+            UserAccount userAccount;
+            if (isNew){
+                userAccount = new UserAccount();
+            }
+            else {
+                userAccount = dao.findUser(i);
+                if(userAccount == null){
+                    return "Could not find UserAccount with id: " + i;
+                }
+            }
+            err = userAccount.processTransaction(tx);
+            if (!returnedError(err) && !Nop.equals(err)) {
+                if(!userAccount.isSafeToPersist()){
+                    return "Task list did not have enough information to save correctly";
+                }
+                dao.saveUser(userAccount);
+            }
         }
-        return null;
+        return err;
     }
 
     /**

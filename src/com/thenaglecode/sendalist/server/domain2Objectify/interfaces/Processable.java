@@ -20,4 +20,9 @@ public interface Processable {
      * @return Error string if problem, Nop if no change or null if the transaction was valid
      */
     String processTransaction(JsonObject tx);
+
+    /**
+     * This function ensures that this object is a valid object with the correct variable values.
+     * */
+    boolean isSafeToPersist();
 }
