@@ -16,8 +16,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RequestProcessor {
 
-    public static final String Nop = "Nop";
-
     /**
      * processes a command from a request made to the server.
      * <p/>
@@ -27,7 +25,7 @@ public class RequestProcessor {
      * @param tx      the json transaction with at least a c for the command.
      * @param context the context from which this transaction was sent
      * @return an error if something was a problem,
-     *         the Nop string if nothing was changed and null if there was no problem.
+     *         the "{@value Processable#Nop}" string if nothing was changed and null if there was no problem.
      */
     public String processTransaction(@NotNull JsonObject tx, OriginatorOfPersistentChange context) {
         boolean isNew = false;
@@ -53,7 +51,7 @@ public class RequestProcessor {
                 }
             }
             err = taskList.processTransaction(tx);
-            if (!returnedError(err) && !Nop.equals(err)) {
+            if (!returnedError(err) && !Processable.Nop.equals(err)) {
                 if(!taskList.isSafeToPersist()){
                     return "Task list did not have enough information to save correctly";
                 }
@@ -71,7 +69,7 @@ public class RequestProcessor {
                 }
             }
             err = userAccount.processTransaction(tx);
-            if (!returnedError(err) && !Nop.equals(err)) {
+            if (!returnedError(err) && !Processable.Nop.equals(err)) {
                 if(!userAccount.isSafeToPersist()){
                     return "Task list did not have enough information to save correctly";
                 }
@@ -82,13 +80,13 @@ public class RequestProcessor {
     }
 
     /**
-     * if the error is not null and not equal to "{@value #Nop}" then it returns true, otherwise it is not an error and
+     * if the error is not null and not equal to "{@value Processable#Nop}" then it returns true, otherwise it is not an error and
      * returns false.
      *
      * @param err the error message to check.
      * @return returns true if the string is an error or false if not.
      */
-    public boolean returnedError(String err) {
-        return err != null && !Nop.equals(err);
+    public static boolean returnedError(String err) {
+        return err != null && !Processable.Nop.equals(err);
     }
 }

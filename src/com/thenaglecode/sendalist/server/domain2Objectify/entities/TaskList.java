@@ -27,7 +27,7 @@ public class TaskList implements Processable {
     public Long id;
     String summary;
     @Embedded
-    private Set<Task> _tasks = null;
+    private Set<Task> tasks = null;
     private Key<UserAccount> owner = null;
 
     public TaskList() {
@@ -57,10 +57,10 @@ public class TaskList implements Processable {
      */
     @NotNull
     public Set<Task> getTasks() {
-        if (_tasks == null) {
-            _tasks = new TreeSet<Task>();
+        if (tasks == null) {
+            tasks = new TreeSet<Task>();
         }
-        return _tasks;
+        return tasks;
     }
 
     public TaskList addTask(@NotNull Task taskToAdd) {
@@ -140,60 +140,98 @@ public class TaskList implements Processable {
     private final String VALUE_PARSE_PROBLEM = "problem translating the value";
 
     /**
-     *
-     * */
+     * {@inheritDoc}
+     */
     @Override
     public String processTransaction(@NotNull JsonObject tx) {
         SendAListDAO dao = new SendAListDAO();
         boolean changed = false;
 
-        for(Map.Entry<String, JsonElement> entry : tx.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : tx.entrySet()) {
             String key = entry.getKey();
             JsonElement value = entry.getValue();
             boolean couldNotParse = false;
             String valueAsString = null;
             try {
                 valueAsString = entry.getValue().getAsString();
-            }
-            catch (ClassCastException e){
+            } catch (ClassCastException e) {
                 couldNotParse = true;
             }
 
-            if("c".equals(key) && "i".equals(key)){
+            if ("c".equals(key) && "i".equals(key)) {
                 //do nothing
-            } else if("summary".equals(key)) {
-                if(couldNotParse) return VALUE_PARSE_PROBLEM;
-                else if(!summary.equals(valueAsString)){
+            } else if ("summary".equals(key)) {
+                if (couldNotParse) return VALUE_PARSE_PROBLEM;
+                else if (!summary.equals(valueAsString)) {
                     changed = true;
                     setSummary(valueAsString);
                 }
-            } else if("owner".equals(key)){
-                if(couldNotParse) return VALUE_PARSE_PROBLEM;
+            } else if ("owner".equals(key)) {
+                if (couldNotParse) return VALUE_PARSE_PROBLEM;
                 Key existingKey = getOwner();
                 UserAccount found = dao.findUser(valueAsString);
-                if(found == null) return "User is not in the database: " + valueAsString;
-                if(!existingKey.getName().equals(valueAsString)) {
+                if (found == null) return "User is not in the database: " + valueAsString;
+                if (!existingKey.getName().equals(valueAsString)) {
                     changed = true;
                     Key<UserAccount> newKey = new Key<UserAccount>(UserAccount.class, valueAsString);
                     setOwner(newKey);
                 }
-            } else if("task".equals(key)){
+            } else if ("task".equals(key)) {
+                boolean isNew = false;
+                boolean isDelete = false;
                 JsonObject obj = value.getAsJsonObject();
-                Task newTask = new Task();
-                newTask.processTransaction(obj);
-                boolean found = false;
-                Set<Task> tasks = getTasks();
-                Iterator<Task> itr = tasks.iterator();
-
-                for(Task task : tasks){
-                    if(task.getId().equals(newTask.getId())){
-                        found = true;
+                if (obj.get("del") != null) {
+                    isDelete = true;
+                }
+                String err;
+                if (isNew) {
+                    Task newTask = new Task();
+                    err = newTask.processTransaction(obj);
+                    if (RequestProcessor.returnedError(err)) {
+                        return err;
+                    } else if (newTask.isSafeToPersist()) {
+                        this.addTask(newTask);
+                    } else {
+                        return "the new task was not safe to persist: " + obj.toString();
                     }
+                } else {
+                    JsonElement idElement = obj.get("i");
+                    if (idElement == null) return "there was no id in the task flagged for deletion";
+                    String id = idElement.getAsString();
+                    long idNumber;
+                    try {
+                        idNumber = Long.valueOf(id);
+                    } catch (NumberFormatException e) {
+                        return "id for task to delete was not of type Long: " + id;
+                    }
+                    boolean found = false;
+                    Iterator<Task> itr = this.tasks.iterator();
+                    while (itr.hasNext() && !found) {
+                        Task existingTask = itr.next();
+                        if (existingTask.getId() == idNumber) {
+                            found = true;
+                            if (isDelete) tasks.remove(existingTask);
+                            else {
+                                // adjust the copy to make sure the real object won't be changed if there is an error.
+                                Task copy = existingTask.duplicate(false);
+                                err = copy.processTransaction(obj);
+                                if (RequestProcessor.returnedError(err)) {
+                                    return err;
+                                } else if (!existingTask.isSafeToPersist()) {
+                                    return "the task does not have enough information: " + obj.toString();
+                                } else {
+                                    existingTask.processTransaction(obj);
+                                }
+                            }
+                        }
+                    }
+                    if(!found) return "the task set for " + ((isDelete)?"deletion" : "updating")
+                        + " was not found! id: " + idNumber;
                 }
             }
         }
 
-        if(!changed) return RequestProcessor.Nop;
+        if (!changed) return Processable.Nop;
         return null; //todo implement
     }
 
@@ -201,12 +239,14 @@ public class TaskList implements Processable {
         //todo implement
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isSafeToPersist() {
         boolean isSafe = summary != null && owner != null;
-        if(_tasks != null){
-            for(Task task : _tasks){
-                if(isSafe) isSafe = task.isSafeToPersist();
+        if (tasks != null) {
+            for (Task task : tasks) {
+                if (isSafe) isSafe = task.isSafeToPersist();
             }
         }
         return isSafe;

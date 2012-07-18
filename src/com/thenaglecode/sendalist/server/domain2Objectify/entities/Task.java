@@ -2,6 +2,7 @@ package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
 import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -78,12 +79,15 @@ public class Task implements Processable, Comparable<Task> {
 
     /**
      * {@inheritDoc}
+     * <br/><br/>
      */
     public String processTransaction(JsonObject tx) {
         return null; //todo implement
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isSafeToPersist() {
         return summary != null;
     }
@@ -99,5 +103,23 @@ public class Task implements Processable, Comparable<Task> {
         if (compare != 0) return compare;
         compare = Boolean.valueOf(done).compareTo(o.getDone());
         return compare;
+    }
+
+    /**
+     * this function will return an exact duplicate of this task unless you specify that you want a duplicate with a new
+     * id (and creation time of now).
+     */
+    @NotNull
+    public Task duplicate(boolean withNewId) {
+        Task copy = new Task();
+        if (withNewId) {
+            copy.created = System.currentTimeMillis();
+        } else {
+            copy.id = this.id;
+            copy.created = this.created;
+        }
+        copy.setSummary(this.summary);
+        copy.setDone(this.done);
+        return copy;
     }
 }
