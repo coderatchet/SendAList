@@ -22,7 +22,8 @@ public interface Processable {
      * specified by "i"). the function modifies the raw variables accordingly. if no changes are made, "{@value #Nop}" is
      * returned. if there was an error with the transaction, e.g. the json object was malformed or had incorrect fields
      * or values, the appropriate error message is returned specifying what needs to happen to rectify the situation
-     * in future.<br/>
+     * in future. delete transactions are processed by the caller of this function. i.e. detect whether there is a
+     * "del" field and process the deletion <br/>
      * see <a href="https://github.com/naredjagle/SendAList/issues/1" >Issue 1</a>
      * @param tx the json object to be processed, unless the main processing unit, the class and id ("c" and "i") fields
      *           are processed by the calling function.

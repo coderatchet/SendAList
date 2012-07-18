@@ -101,6 +101,7 @@ public class TaskList implements Processable {
         return this;
     }
 
+    @NotNull
     public Key<TaskList> generateKey() {
         return new Key<TaskList>(owner, TaskList.class, this.id);
     }
@@ -144,7 +145,6 @@ public class TaskList implements Processable {
      */
     @Override
     public String processTransaction(@NotNull JsonObject tx) {
-        SendAListDAO dao = new SendAListDAO();
         boolean changed = false;
 
         for (Map.Entry<String, JsonElement> entry : tx.entrySet()) {
@@ -167,6 +167,7 @@ public class TaskList implements Processable {
                     setSummary(valueAsString);
                 }
             } else if ("owner".equals(key)) {
+                SendAListDAO dao = new SendAListDAO();
                 if (couldNotParse) return VALUE_PARSE_PROBLEM;
                 Key existingKey = getOwner();
                 UserAccount found = dao.findUser(valueAsString);
@@ -214,8 +215,7 @@ public class TaskList implements Processable {
                             if (isDelete) {
                                 changed = true;
                                 tasks.remove(existingTask);
-                            }
-                            else {
+                            } else {
                                 // adjust the copy to make sure the real object won't be changed if there is an error.
                                 Task copy = existingTask.duplicate(false);
                                 err = copy.processTransaction(obj);
@@ -230,18 +230,20 @@ public class TaskList implements Processable {
                             }
                         }
                     }
-                    if(!found) return "the task set for " + ((isDelete)?"deletion" : "updating")
-                        + " was not found! id: " + idNumber;
+                    if (!found) return "the task set for " + ((isDelete) ? "deletion" : "updating")
+                            + " was not found! id: " + idNumber;
                 }
             }
         }
 
         if (!changed) return Processable.Nop;
-        return null; //todo implement
+        return null;
     }
 
     private void processDeleteTransaction() {
-        //todo implement
+        SendAListDAO dao = new SendAListDAO();
+        UserAccount owner = dao.findUser(this.getOwner().getName());
+        owner.deleteTaskList(this.generateKey());
     }
 
     /**
