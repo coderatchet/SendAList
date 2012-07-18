@@ -15,12 +15,9 @@
   </component>
   <component name="ChangeListManager">
     <list id="4f108fa0-a926-4a2d-8a0a-b2e8536905e4" name="Default" comment="" />
-    <list default="true" id="aa68c954-2bfc-438e-97a5-e03ec6edc595" name="iss1" comment="entities with processTransaction">
+    <list default="true" id="aa68c954-2bfc-438e-97a5-e03ec6edc595" name="iss1" comment="*processTransaction javadoc updated and implemented for TaskList.&#10;*created duplicate method that will make an exact copy of a task or create a duplicate with a new id and created time.">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/Task.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/Task.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/Processable.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/Processable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/RequestProcessor.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/RequestProcessor.java" />
     </list>
     <ignored path="SendAList.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -109,7 +106,7 @@
       <file leaf-file-name="TaskList.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="214" column="49" selection-start="6992" selection-end="6992" vertical-scroll-proportion="0.20446736">
+            <state line="226" column="51" selection-start="7757" selection-end="7757" vertical-scroll-proportion="0.29209623">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -700,7 +697,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="*some random configuration files." />
+    <option name="LAST_COMMIT_MESSAGE" value="*processTransaction javadoc updated and implemented for TaskList.&#10;*created duplicate method that will make an exact copy of a task or create a duplicate with a new id and created time." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -716,6 +713,7 @@
     <MESSAGE value="new idea directory" />
     <MESSAGE value="*couldn't figure out how to switch from subversion to git in intellij so i removed all the intellij files from github and re made all the servers.&#10;*switched from appengine adk 1.6.5 to 1.7.0" />
     <MESSAGE value="*some random configuration files." />
+    <MESSAGE value="*processTransaction javadoc updated and implemented for TaskList.&#10;*created duplicate method that will make an exact copy of a task or create a duplicate with a new id and created time." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -824,7 +822,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="214" column="49" selection-start="6992" selection-end="6992" vertical-scroll-proportion="0.20446736">
+        <state line="226" column="51" selection-start="7757" selection-end="7757" vertical-scroll-proportion="0.29209623">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

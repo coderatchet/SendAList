@@ -190,6 +190,7 @@ public class TaskList implements Processable {
                     if (RequestProcessor.returnedError(err)) {
                         return err;
                     } else if (newTask.isSafeToPersist()) {
+                        changed = true;
                         this.addTask(newTask);
                     } else {
                         return "the new task was not safe to persist: " + obj.toString();
@@ -210,7 +211,10 @@ public class TaskList implements Processable {
                         Task existingTask = itr.next();
                         if (existingTask.getId() == idNumber) {
                             found = true;
-                            if (isDelete) tasks.remove(existingTask);
+                            if (isDelete) {
+                                changed = true;
+                                tasks.remove(existingTask);
+                            }
                             else {
                                 // adjust the copy to make sure the real object won't be changed if there is an error.
                                 Task copy = existingTask.duplicate(false);
@@ -220,6 +224,7 @@ public class TaskList implements Processable {
                                 } else if (!existingTask.isSafeToPersist()) {
                                     return "the task does not have enough information: " + obj.toString();
                                 } else {
+                                    changed = true;
                                     existingTask.processTransaction(obj);
                                 }
                             }
