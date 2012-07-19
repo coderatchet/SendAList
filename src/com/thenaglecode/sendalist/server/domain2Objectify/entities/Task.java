@@ -1,5 +1,6 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.persistence.Id;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,9 +82,44 @@ public class Task implements Processable, Comparable<Task> {
     /**
      * {@inheritDoc}
      * <br/><br/>
+     * Possible Fields:
+     * <ul>
+     *     <li>summary - the description of the task</li>
+     *     <li></li>
+     * </ul>
      */
     public String processTransaction(JsonObject tx) {
-        return null; //todo implement
+        boolean changed = false;
+
+        for (Map.Entry<String, JsonElement> entry : tx.entrySet()) {
+            String key = entry.getKey();
+            JsonElement value = entry.getValue();
+            if(key == null) return "key was null";
+            if(value == null) return "value was null";
+
+            String valueAsString = null;
+            if("c".equals(key) || "i".equals(key)){
+                //do nothing
+            } else if("summary".equals(key)){
+                valueAsString = value.getAsString();
+                if(valueAsString == null)
+                    return "could not parse summary value: " + value.toString();
+                if(!this.getSummary().equals(valueAsString)){
+                    changed = true;
+                    this.setSummary(valueAsString);
+                }
+            } else if("done".equals(key)){
+                boolean newDone = value.getAsBoolean();
+                if(newDone != this.getDone()){
+                    changed = true;
+                    this.setDone(newDone);
+                }
+            } else {
+                return "unknown field in task transaction: " + key;
+            }
+        }
+
+        return (changed) ? null : Processable.Nop;
     }
 
     /**
