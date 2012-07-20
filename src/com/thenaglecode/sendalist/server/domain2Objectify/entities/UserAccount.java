@@ -1,6 +1,7 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
 import com.google.apps.easyconnect.easyrp.client.basic.data.Account;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Unindexed;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -398,7 +400,19 @@ public class UserAccount implements Account, ToJson, Processable {
 
     @Override
     public String processTransaction(JsonObject tx) {
-        return null; //todo implement
+        boolean changed = false;
+
+        for (Map.Entry<String, JsonElement> entry : tx.entrySet()) {
+            String key = entry.getKey();
+            JsonElement value = entry.getValue();
+            boolean couldNotParse = false;
+            String valueAsString = null;
+
+
+            if()
+        }
+
+
     }
 
     /**
