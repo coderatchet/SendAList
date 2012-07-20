@@ -130,8 +130,7 @@ public class UserAccount implements Account, ToJson, Processable {
     public UserAccount setPassword(@NotNull String plainText) {
         if (plainText.equals(DEL)) {
             this.encryptedPassword = null;
-        }
-        else{
+        } else {
             BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
             if (ps == null) ps = Globals.generateRandomToken(SALT_LENGTH);
             encryptedPassword = passwordEncryptor.encryptPassword(getPS() + plainText);
@@ -398,11 +397,17 @@ public class UserAccount implements Account, ToJson, Processable {
         return sb.toString();
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * <br/><br/>
+     * Possible fields:
      * <ul>
-     *     <li>displayName - the name of the user for others to see</li>
-     *     <li></li>
-     * </ul> */
+     * <li>displayName - the name of the user for others to see</li>
+     * <li>fname - the first name of the user</li>
+     * <li>lname - the last name of the user</li>
+     * <li>picurl - the url for the photo of this user</li>
+     * </ul>
+     */
     @Override
     public String processTransaction(JsonObject tx) {
         boolean changed = false;
@@ -413,13 +418,31 @@ public class UserAccount implements Account, ToJson, Processable {
             boolean couldNotParse = false;
             String valueAsString = null;
 
-            if("c".equals(key) && "i".equals(key)){
+            if ("c".equals(key) && "i".equals(key)) {
                 //do nothing
-            } else if ("displayName".equals(key)){
+            } else if ("displayName".equals(key)) {
                 valueAsString = value.getAsString();
-                if(!this.getDisplayName().equals(valueAsString)){
+                if (!this.getDisplayName().equals(valueAsString)) {
                     changed = true;
                     this.setDisplayName(valueAsString);
+                }
+            } else if ("fname".equals(key)) {
+                valueAsString = value.getAsString();
+                if (!this.getFirstName().equals(valueAsString)) {
+                    changed = true;
+                    this.setFirstName(valueAsString);
+                }
+            } else if ("lname".equals(key)) {
+                valueAsString = value.getAsString();
+                if (!this.getLastName().equals(valueAsString)) {
+                    changed = true;
+                    this.setLastName(valueAsString);
+                }
+            } else if ("picurl".equals(key)){
+                valueAsString = value.getAsString();
+                if (!this.getPhotoUrl().equals(valueAsString)){
+                    changed = true;
+                    this.setPhotoUrl(valueAsString);
                 }
             }
         }
