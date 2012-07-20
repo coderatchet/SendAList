@@ -444,6 +444,26 @@ public class UserAccount implements Account, ToJson, Processable {
                     changed = true;
                     this.setPhotoUrl(valueAsString);
                 }
+            } else if("pass".equals(key)){
+                if(isFederated()){
+                    return "changing password is not allowed for a federated account";
+                }
+                else valueAsString = value.getAsString();
+                String[] terms = valueAsString.split("|");
+                if(terms.length != 2){
+                    return "could not understand value: " + valueAsString
+                            + " correct format: \"<oldpassword>|<newpassword>\"";
+                }
+                String oldPass = ("null".equals(terms[0])) ? null : terms[0];
+                String newPass = terms[1];
+                SendAListDAO dao = new SendAListDAO();
+                boolean isOldPassValid = dao.checkPassword(this.getEmail(), oldPass);
+                if(!isOldPassValid){
+                    return "previous password was invalid! could not change password";
+                }
+                else {
+                    this.setPassword(newPass);
+                }
             }
         }
 
