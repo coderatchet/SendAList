@@ -398,6 +398,11 @@ public class UserAccount implements Account, ToJson, Processable {
         return sb.toString();
     }
 
+    /** {@inheritDoc}
+     * <ul>
+     *     <li>displayName - the name of the user for others to see</li>
+     *     <li></li>
+     * </ul> */
     @Override
     public String processTransaction(JsonObject tx) {
         boolean changed = false;
@@ -408,11 +413,18 @@ public class UserAccount implements Account, ToJson, Processable {
             boolean couldNotParse = false;
             String valueAsString = null;
 
-
-            if()
+            if("c".equals(key) && "i".equals(key)){
+                //do nothing
+            } else if ("displayName".equals(key)){
+                valueAsString = value.getAsString();
+                if(!this.getDisplayName().equals(valueAsString)){
+                    changed = true;
+                    this.setDisplayName(valueAsString);
+                }
+            }
         }
 
-
+        return (changed) ? null : Processable.Nop;
     }
 
     /**
