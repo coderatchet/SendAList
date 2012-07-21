@@ -16,6 +16,11 @@ import java.io.IOException;
  * User: Jared Nagle
  * Date: 15/07/12
  * Time: 8:12 PM
+ *
+ * The transaction servlet will handle json objects that need to be processed.
+ *
+ * This will not handle the validity of a request, such as if a user is allowed to perform the operation, but will
+ * possibly handle any DOS attacks such as spammed objects from a particular ip address.
  */
 public class TransactionServlet extends HttpServlet{
 

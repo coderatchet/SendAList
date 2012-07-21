@@ -82,6 +82,15 @@
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Transactions</servlet-name>
+        <servlet-class>com.thenaglecode.sendalist.server.servlets.TransactionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Transactions</servlet-name>
+        <url-pattern>/api</url-pattern>
+    </servlet-mapping>
+
     <listener>
         <listener-class>
             com.thenaglecode.sendalist.server.ContextLoader
