@@ -420,6 +420,16 @@ public class UserAccount implements Account, ToJson, Processable {
 
             if ("c".equals(key) && "i".equals(key)) {
                 //do nothing
+            } else if ("email".equals(key)){
+                valueAsString = value.getAsString();
+                JsonElement id = tx.get("i");
+                boolean isNew = "new".equals(id.getAsString());
+                if (isNew && this.getEmail() == null){
+
+                }
+                else {
+                    return "cannot change email of existing user";
+                }
             } else if ("displayName".equals(key)) {
                 valueAsString = value.getAsString();
                 if (!this.getDisplayName().equals(valueAsString)) {
@@ -462,6 +472,8 @@ public class UserAccount implements Account, ToJson, Processable {
                 } else {
                     this.setPassword(newPass);
                 }
+            } else {
+                return "did not understand field: " + key;
             }
         }
 
@@ -486,7 +498,10 @@ public class UserAccount implements Account, ToJson, Processable {
      * {@inheritDoc}
      */
     public boolean isSafeToPersist() {
-        return true;
-        //todo implement
+        boolean safe = this.getEmail() != null;
+        if(!isFederated()){
+            safe = safe && this.getEncryptedPassword() != null;
+        }
+        return safe;
     }
 }

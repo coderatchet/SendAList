@@ -47,15 +47,15 @@ public class TransactionServlet extends HttpServlet {
             RequestProcessor processor = new RequestProcessor();
             String err = processor.processTransaction(json.getAsJsonObject(), context);
             if (null == err) {
-                returnCode = 200;
+                returnCode = HttpServletResponse.SC_OK;
                 returnMessage = "success";
             } else {
                 if (RequestProcessor.returnedError(err)) {
-                    returnCode = 400;
+                    returnCode = HttpServletResponse.SC_BAD_REQUEST;
                     returnMessage = "Bad Request";
                     returnReason = err;
                 } else {
-                    returnCode = 200;
+                    returnCode = HttpServletResponse.SC_NOT_MODIFIED;
                     returnMessage = "no change";
                 }
             }
