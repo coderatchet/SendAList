@@ -3,6 +3,7 @@ package com.thenaglecode.sendalist.server.servlets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
 
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,9 @@ import java.io.IOException;
  * Time: 8:12 PM
  */
 public class TransactionServlet extends HttpServlet{
+
+    String autoHeader = "<!DOCTYPE HTML/><head></head>";
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res){
         //
@@ -27,8 +31,13 @@ public class TransactionServlet extends HttpServlet{
         try {
             OriginatorOfPersistentChange context = OriginatorOfPersistentChange.getContext(req);
             JsonReader reader = new JsonReader(req.getReader());
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(reader);
+            JsonElement json = new JsonParser().parse(reader);
+            RequestProcessor processor = new RequestProcessor();
+            String err = processor.processTransaction(json.getAsJsonObject(), context);
+            if(null == err){
+
+            }
+
             json.getAsJsonObject();
         } catch (IOException e) {
             e.printStackTrace();
