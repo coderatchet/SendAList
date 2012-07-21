@@ -16,7 +16,7 @@ import java.io.IOException;
  * Date: 15/07/12
  * Time: 8:12 PM
  */
-public class UserServlet extends HttpServlet{
+public class TransactionServlet extends HttpServlet{
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res){
         //
