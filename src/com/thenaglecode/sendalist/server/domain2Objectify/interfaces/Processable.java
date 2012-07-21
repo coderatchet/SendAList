@@ -35,4 +35,5 @@ public interface Processable {
      * This function ensures that this object is a valid object with the correct variable values.
      * */
     boolean isSafeToPersist();
+
 }

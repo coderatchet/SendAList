@@ -37,6 +37,10 @@ public class TaskList implements Processable {
         this.id = id;
     }
 
+    public long getId(){
+        return id;
+    }
+
     public TaskList setSummary(String summary) {
         this.summary = summary;
         return this;

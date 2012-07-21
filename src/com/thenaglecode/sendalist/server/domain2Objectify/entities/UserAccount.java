@@ -438,19 +438,18 @@ public class UserAccount implements Account, ToJson, Processable {
                     changed = true;
                     this.setLastName(valueAsString);
                 }
-            } else if ("picurl".equals(key)){
+            } else if ("picurl".equals(key)) {
                 valueAsString = value.getAsString();
-                if (!this.getPhotoUrl().equals(valueAsString)){
+                if (!this.getPhotoUrl().equals(valueAsString)) {
                     changed = true;
                     this.setPhotoUrl(valueAsString);
                 }
-            } else if("pass".equals(key)){
-                if(isFederated()){
+            } else if ("pass".equals(key)) {
+                if (isFederated()) {
                     return "changing password is not allowed for a federated account";
-                }
-                else valueAsString = value.getAsString();
+                } else valueAsString = value.getAsString();
                 String[] terms = valueAsString.split("|");
-                if(terms.length != 2){
+                if (terms.length != 2) {
                     return "could not understand value: " + valueAsString
                             + " correct format: \"<oldpassword>|<newpassword>\"";
                 }
@@ -458,16 +457,29 @@ public class UserAccount implements Account, ToJson, Processable {
                 String newPass = terms[1];
                 SendAListDAO dao = new SendAListDAO();
                 boolean isOldPassValid = dao.checkPassword(this.getEmail(), oldPass);
-                if(!isOldPassValid){
+                if (!isOldPassValid) {
                     return "previous password was invalid! could not change password";
-                }
-                else {
+                } else {
                     this.setPassword(newPass);
                 }
             }
         }
 
         return (changed) ? null : Processable.Nop;
+    }
+
+    private String processDeleteTransaction() {
+        String err = null;
+
+        //delete all the related task lists?
+        SendAListDAO dao = new SendAListDAO();
+        for (Key<TaskList> key : this.getTaskLists()) {
+            TaskList list = dao.findTaskList(key.getId());
+            if(list != null) dao.deleteTaskList(list.getId());
+        }
+
+
+        return err;
     }
 
     /**
