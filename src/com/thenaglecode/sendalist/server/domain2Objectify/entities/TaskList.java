@@ -166,7 +166,7 @@ public class TaskList implements Processable {
                 //do nothing
             } else if ("summary".equals(key)) {
                 if (couldNotParse) return VALUE_PARSE_PROBLEM;
-                else if (!summary.equals(valueAsString)) {
+                else if (this.getSummary() == null || !this.getSummary().equals(valueAsString)) {
                     changed = true;
                     setSummary(valueAsString);
                 }
@@ -176,7 +176,7 @@ public class TaskList implements Processable {
                 Key existingKey = getOwner();
                 UserAccount found = dao.findUser(valueAsString);
                 if (found == null) return "User is not in the database: " + valueAsString;
-                if (!existingKey.getName().equals(valueAsString)) {
+                if (existingKey == null || !existingKey.getName().equals(valueAsString)) {
                     changed = true;
                     Key<UserAccount> newKey = new Key<UserAccount>(UserAccount.class, valueAsString);
                     setOwner(newKey);
