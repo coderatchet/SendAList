@@ -104,7 +104,7 @@ public class Task implements Processable, Comparable<Task> {
                 valueAsString = value.getAsString();
                 if(valueAsString == null)
                     return "could not parse summary value: " + value.toString();
-                if(!this.getSummary().equals(valueAsString)){
+                if(this.getSummary() == null || !this.getSummary().equals(valueAsString)){
                     changed = true;
                     this.setSummary(valueAsString);
                 }
