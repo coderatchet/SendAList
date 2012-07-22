@@ -37,7 +37,7 @@ public class TaskList implements Processable {
         this.id = id;
     }
 
-    public long getId(){
+    public long getId() {
         return id;
     }
 
@@ -155,11 +155,14 @@ public class TaskList implements Processable {
             String key = entry.getKey();
             JsonElement value = entry.getValue();
             boolean couldNotParse = false;
+            boolean unsupported = false;
             String valueAsString = null;
             try {
-                valueAsString = entry.getValue().getAsString();
+                valueAsString = value.getAsString();
             } catch (ClassCastException e) {
                 couldNotParse = true;
+            } catch (UnsupportedOperationException e) {
+                unsupported = true;
             }
 
             if ("c".equals(key) || "i".equals(key)) {
@@ -187,6 +190,9 @@ public class TaskList implements Processable {
                 JsonObject obj = value.getAsJsonObject();
                 if (obj.get("del") != null) {
                     isDelete = true;
+                }
+                if (obj.has("i") && "new".equals(obj.get("i").getAsString())) {
+                    isNew = true;
                 }
                 String err;
                 if (isNew) {

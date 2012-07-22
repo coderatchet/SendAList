@@ -51,6 +51,11 @@ public class RequestProcessor {
             if (isNew) {
                 taskList = new TaskList();
             } else {
+                try {
+                    id = Long.valueOf(i);
+                } catch (NumberFormatException e){
+                    return "could not parse TaskList id as long: " + i;
+                }
                 taskList = dao.findTaskList(id);
                 if (taskList == null) {
                     return "Could not find TaskList with id: " + id;
