@@ -426,6 +426,7 @@ public class UserAccount implements Account, ToJson, Processable {
                 boolean isNew = "new".equals(id.getAsString());
                 if (isNew && this.getEmail() == null){
                     changed = true;
+                    //todo email validation
                     setEmail(valueAsString);
                 }
                 else {
@@ -433,25 +434,25 @@ public class UserAccount implements Account, ToJson, Processable {
                 }
             } else if ("displayName".equals(key)) {
                 valueAsString = value.getAsString();
-                if (!this.getDisplayName().equals(valueAsString)) {
+                if (this.getDisplayName() == null || !this.getDisplayName().equals(valueAsString)) {
                     changed = true;
                     this.setDisplayName(valueAsString);
                 }
             } else if ("fname".equals(key)) {
                 valueAsString = value.getAsString();
-                if (!this.getFirstName().equals(valueAsString)) {
+                if (this.getFirstName() == null || !this.getFirstName().equals(valueAsString)) {
                     changed = true;
                     this.setFirstName(valueAsString);
                 }
             } else if ("lname".equals(key)) {
                 valueAsString = value.getAsString();
-                if (!this.getLastName().equals(valueAsString)) {
+                if (this.getLastName() == null || !this.getLastName().equals(valueAsString)) {
                     changed = true;
                     this.setLastName(valueAsString);
                 }
             } else if ("picurl".equals(key)) {
                 valueAsString = value.getAsString();
-                if (!this.getPhotoUrl().equals(valueAsString)) {
+                if (this.getPhotoUrl() == null || !this.getPhotoUrl().equals(valueAsString)) {
                     changed = true;
                     this.setPhotoUrl(valueAsString);
                 }
