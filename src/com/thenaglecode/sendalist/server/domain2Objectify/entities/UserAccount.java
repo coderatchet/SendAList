@@ -418,14 +418,15 @@ public class UserAccount implements Account, ToJson, Processable {
             boolean couldNotParse = false;
             String valueAsString = null;
 
-            if ("c".equals(key) && "i".equals(key)) {
+            if ("c".equals(key) || "i".equals(key)) {
                 //do nothing
             } else if ("email".equals(key)){
                 valueAsString = value.getAsString();
                 JsonElement id = tx.get("i");
                 boolean isNew = "new".equals(id.getAsString());
                 if (isNew && this.getEmail() == null){
-
+                    changed = true;
+                    setEmail(valueAsString);
                 }
                 else {
                     return "cannot change email of existing user";

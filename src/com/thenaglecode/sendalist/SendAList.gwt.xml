@@ -16,7 +16,7 @@
     <!-- safari settings -->
 
     <!-- delete this in order to compile for other browsers -->
-    <set-property name="user.agent" value="safari"/>
+    <!--set-property name="user.agent" value="safari"/-->
     <!-- default client factory -->
     <replace-with class="com.thenaglecode.sendalist.client.ClientFactoryImpl">
         <when-type-is class="com.thenaglecode.sendalist.client.ClientFactory" />

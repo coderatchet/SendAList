@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,7 +26,7 @@ import java.io.IOException;
  * possibly handle any DOS attacks such as spammed objects from a particular ip address.
  * </p>
  * <p>
- *     in the future, the servlet will be able to process batch requests by iterating through multiple json objects.
+ * in the future, the servlet will be able to process batch requests by iterating through multiple json objects.
  * </p>
  */
 public class TransactionServlet extends HttpServlet {
@@ -65,8 +66,11 @@ public class TransactionServlet extends HttpServlet {
             obj.addProperty("message", returnMessage);
             obj.addProperty("code", returnCode);
             if (returnReason != null) obj.addProperty("reason", returnReason);
+            String message = obj.toString();
 
-            json.getAsJsonObject();
+            PrintWriter writer = res.getWriter();
+            writer.append(message);
+            res.flushBuffer();
         } catch (IOException e) {
             e.printStackTrace();
         }

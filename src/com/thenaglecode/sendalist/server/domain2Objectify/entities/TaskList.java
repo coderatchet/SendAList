@@ -162,7 +162,7 @@ public class TaskList implements Processable {
                 couldNotParse = true;
             }
 
-            if ("c".equals(key) && "i".equals(key)) {
+            if ("c".equals(key) || "i".equals(key)) {
                 //do nothing
             } else if ("summary".equals(key)) {
                 if (couldNotParse) return VALUE_PARSE_PROBLEM;
@@ -237,6 +237,8 @@ public class TaskList implements Processable {
                     if (!found) return "the task set for " + ((isDelete) ? "deletion" : "updating")
                             + " was not found! id: " + idNumber;
                 }
+            } else {
+                return "did not understand field for TaskList processing: " + key;
             }
         }
 

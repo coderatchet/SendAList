@@ -1,6 +1,5 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.interfaces;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
@@ -21,6 +20,14 @@ public class RequestProcessor {
      * <p/>
      * convention is that the id is the id of the object, otherwise if the identifier is
      * "new" then we need to create a new object.
+     * <p/>
+     * <p>
+     * <b>Object Types:</b>
+     * <ul>
+     * <li>USER - see {@link UserAccount}</li>
+     * <li>LIST - see {@link TaskList}</li>
+     * </ul>
+     * </p>
      *
      * @param tx      the json transaction with at least a c for the command.
      * @param context the context from which this transaction was sent
@@ -31,7 +38,6 @@ public class RequestProcessor {
         boolean isNew = false;
         Long id = -1l;
 
-        JsonArray txs = tx.getAsJsonArray();
         String c = tx.get("c").getAsString(); //this represents the command, usually the object type.
         String i = tx.get("i").getAsString(); //this represents the id or the instruction to create a new object
         SendAListDAO dao = new SendAListDAO();
@@ -46,31 +52,30 @@ public class RequestProcessor {
                 taskList = new TaskList();
             } else {
                 taskList = dao.findTaskList(id);
-                if(taskList == null){
+                if (taskList == null) {
                     return "Could not find TaskList with id: " + id;
                 }
             }
             err = taskList.processTransaction(tx);
             if (!returnedError(err) && !Processable.Nop.equals(err)) {
-                if(!taskList.isSafeToPersist()){
+                if (!taskList.isSafeToPersist()) {
                     return "Task list did not have enough information to save correctly";
                 }
                 dao.saveTaskList(taskList);
             }
         } else if ("USER".equals(c)) {
             UserAccount userAccount;
-            if (isNew){
+            if (isNew) {
                 userAccount = new UserAccount();
-            }
-            else {
+            } else {
                 userAccount = dao.findUser(i);
-                if(userAccount == null){
+                if (userAccount == null) {
                     return "Could not find UserAccount with id: " + i;
                 }
             }
             err = userAccount.processTransaction(tx);
             if (!returnedError(err) && !Processable.Nop.equals(err)) {
-                if(!userAccount.isSafeToPersist()){
+                if (!userAccount.isSafeToPersist()) {
                     return "Task list did not have enough information to save correctly";
                 }
                 dao.saveUser(userAccount);
