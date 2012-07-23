@@ -1,11 +1,11 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
-import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Embedded;
@@ -87,10 +87,10 @@ public class TaskList implements Processable {
         return this;
     }
 
-    public TaskList deleteTask(long id) {
+    public TaskList deleteTask(@NotNull String taskToDelete) {
         Set<Task> tasks = getTasks();
         for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getSummary().equals(taskToDelete)) {
                 return deleteTask(task);
             }
         }
@@ -187,62 +187,34 @@ public class TaskList implements Processable {
             } else if ("task".equals(key)) {
                 boolean isNew = false;
                 boolean isDelete = false;
-                JsonObject obj = value.getAsJsonObject();
-                if (obj.get("del") != null) {
-                    isDelete = true;
-                }
-                if (obj.has("i") && "new".equals(obj.get("i").getAsString())) {
-                    isNew = true;
-                }
-                String err;
-                if (isNew) {
-                    Task newTask = new Task();
-                    err = newTask.processTransaction(obj);
-                    if (RequestProcessor.returnedError(err)) {
-                        return err;
-                    } else if (newTask.isSafeToPersist()) {
-                        changed = true;
-                        this.addTask(newTask);
-                    } else {
-                        return "the new task was not safe to persist: " + obj.toString();
-                    }
-                } else {
-                    JsonElement idElement = obj.get("i");
-                    if (idElement == null) return "there was no id in the task flagged for deletion";
-                    String id = idElement.getAsString();
-                    long idNumber;
-                    try {
-                        idNumber = Long.valueOf(id);
-                    } catch (NumberFormatException e) {
-                        return "id for task to delete was not of type Long: " + id;
-                    }
-                    boolean found = false;
-                    Iterator<Task> itr = this.tasks.iterator();
-                    while (itr.hasNext() && !found) {
-                        Task existingTask = itr.next();
-                        if (existingTask.getId() == idNumber) {
-                            found = true;
-                            if (isDelete) {
-                                changed = true;
-                                tasks.remove(existingTask);
-                            } else {
-                                // adjust the copy to make sure the real object won't be changed if there is an error.
-                                Task copy = existingTask.duplicate(false);
-                                err = copy.processTransaction(obj);
-                                if (RequestProcessor.returnedError(err)) {
-                                    return err;
-                                } else if (!existingTask.isSafeToPersist()) {
-                                    return "the task does not have enough information: " + obj.toString();
-                                } else {
-                                    changed = true;
-                                    existingTask.processTransaction(obj);
-                                }
-                            }
+
+                JsonArray array = value.getAsJsonArray();
+                if(array.size() < 1) return "task transaction does not have any arguments!";
+
+                Iterator<JsonElement> itr = array.iterator();
+                Set<Task> existingTasks = getTasks();
+                Task modTask = null;
+                if(itr.hasNext()){ //parse summary
+                    JsonElement element = itr.next();
+                    String summary = element.getAsString();
+                    for(Task task : existingTasks){
+                        if(task.getSummary().equals(summary)){
+                            modTask = task;
                         }
                     }
-                    if (!found) return "the task set for " + ((isDelete) ? "deletion" : "updating")
-                            + " was not found! id: " + idNumber;
+                    if(modTask == null){
+                        modTask = new Task(summary);
+                    }
                 }
+                if(itr.hasNext()){
+                    JsonElement element = itr.next();
+                    boolean newDone = element.getAsBoolean();
+                    if()
+                }
+
+
+            } else if ("deltask".equals(key)) {
+
             } else {
                 return "did not understand field for TaskList processing: " + key;
             }

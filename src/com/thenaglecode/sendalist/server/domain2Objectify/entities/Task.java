@@ -1,13 +1,12 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import javax.persistence.Id;
 import java.util.Map;
 
 /**
@@ -18,10 +17,8 @@ import java.util.Map;
  * <p/>
  * Tasks must be created in an existing tasklist
  */
-public class Task implements Processable, Comparable<Task> {
+public class Task implements Comparable<Task> {
 
-    @Id
-    Long id;
     private boolean done;
     private long created;
     private String summary = null;
@@ -34,10 +31,6 @@ public class Task implements Processable, Comparable<Task> {
 
     public Task() {
         created = System.currentTimeMillis();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Task setDone(boolean done) {
@@ -80,16 +73,14 @@ public class Task implements Processable, Comparable<Task> {
     }
 
     /**
-     * {@inheritDoc}
-     * <br/><br/>
-     * Possible Fields:
-     * <ul>
-     *     <li>summary - the description of the task</li>
-     *     <li></li>
-     * </ul>
+     * this function will process an array that represents the task.
+     *
+     * ["summary string",boolean-for-done]
      */
-    public String processTransaction(JsonObject tx) {
+    public String processTransaction(JsonArray tx) {
         boolean changed = false;
+
+
 
         for (Map.Entry<String, JsonElement> entry : tx.entrySet()) {
             String key = entry.getKey();
@@ -147,12 +138,11 @@ public class Task implements Processable, Comparable<Task> {
      * id (and creation time of now).
      */
     @NotNull
-    public Task duplicate(boolean withNewId) {
+    public Task duplicate(boolean withNewCreationTime) {
         Task copy = new Task();
-        if (withNewId) {
+        if (withNewCreationTime) {
             copy.created = System.currentTimeMillis();
         } else {
-            copy.id = this.id;
             copy.created = this.created;
         }
         copy.setSummary(this.summary);
