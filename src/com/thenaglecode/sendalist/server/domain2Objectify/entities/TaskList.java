@@ -203,13 +203,17 @@ public class TaskList implements Processable {
                         }
                     }
                     if(modTask == null){
+                        changed = true;
                         modTask = new Task(summary);
                     }
                 }
                 if(itr.hasNext()){
                     JsonElement element = itr.next();
                     boolean newDone = element.getAsBoolean();
-                    if()
+                    if(newDone != modTask.getDone()){
+                        changed = true;
+                        modTask.setDone(newDone);
+                    }
                 }
 
 
