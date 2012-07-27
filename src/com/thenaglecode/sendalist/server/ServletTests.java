@@ -52,6 +52,5 @@ public class ServletTests {
         ServletUnitClient sc = sr.newClient();
         WebRequest request = new PostMethodWebRequest("localhost:8080/api");
         request.setHeaderField("Content-Type", "application/json");
-
     }
 }
