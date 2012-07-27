@@ -1,0 +1,6 @@
+{"c":"USER",
+"i":"jarednagle@sendalist.com",
+"fname":"Jared",
+"lname":"Nagle",
+"displayname":"nagles",
+"pass":"null,1234"}

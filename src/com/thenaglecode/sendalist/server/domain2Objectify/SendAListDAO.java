@@ -62,7 +62,7 @@ public class SendAListDAO extends DAOBase {
         try {
             userAccount = ofy().get(UserAccount.class, email);
         } catch (NotFoundException e) {
-            return allowedToCreate ? new UserAccount().setEmail(email) : null;
+            return allowedToCreate ? new UserAccount(email) : null;
         }
         return userAccount;
     }

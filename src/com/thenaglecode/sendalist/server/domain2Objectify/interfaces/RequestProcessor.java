@@ -69,15 +69,7 @@ public class RequestProcessor {
                 dao.saveTaskList(taskList);
             }
         } else if ("USER".equals(c)) {
-            UserAccount userAccount;
-            if (isNew) {
-                userAccount = new UserAccount();
-            } else {
-                userAccount = dao.findUser(i);
-                if (userAccount == null) {
-                    return "Could not find UserAccount with id: " + i;
-                }
-            }
+            UserAccount userAccount = dao.findOrCreateUser(i, true);
             err = userAccount.processTransaction(tx);
             if (!returnedError(err) && !Processable.Nop.equals(err)) {
                 if (!userAccount.isSafeToPersist()) {

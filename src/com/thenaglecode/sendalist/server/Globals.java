@@ -141,10 +141,9 @@ public class Globals {
     public static UserAccount generateFakeUser() {
         String first = FIRST_NAMES[gen.nextInt(FIRST_NAMES.length)];
         String last = LAST_NAMES[gen.nextInt(LAST_NAMES.length)];
-        return new UserAccount()
+        return new UserAccount(first + last + "@notreal.com")
                 .setFirstName(first)
                 .setLastName(last)
-                .setEmail(first + last + "@notreal.com")
                 .setPassword(FAKE_PASS)
                 .setPhotoUrl("/resources/images/no.jpg");
     }

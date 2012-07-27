@@ -26,7 +26,7 @@ import java.util.Map;
  */
 
 public class UserAccount implements Account, ToJson, Processable {
-    private static UserAccount testUser = new UserAccount();
+    private static UserAccount testUser = new UserAccount("joesmith@sendalist.com");
     private static final int SALT_LENGTH = 10;
 
     static {
@@ -52,6 +52,13 @@ public class UserAccount implements Account, ToJson, Processable {
     @Unindexed
     String ps;
     private static final String DEL = "del";
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    private UserAccount(){}
+
+    public UserAccount(String email) {
+        this.email = email;
+    }
 
     /**
      * sets the last name of the user
@@ -406,6 +413,7 @@ public class UserAccount implements Account, ToJson, Processable {
      * <li>fname - the first name of the user</li>
      * <li>lname - the last name of the user</li>
      * <li>picurl - the url for the photo of this user</li>
+     * <li>pass - "[oldpassword],[newpassword]"</li>
      * </ul>
      */
     @Override
@@ -432,7 +440,7 @@ public class UserAccount implements Account, ToJson, Processable {
                 else {
                     return "cannot change email of existing user";
                 }
-            } else if ("displayName".equals(key)) {
+            } else if ("displayname".equals(key)) {
                 valueAsString = value.getAsString();
                 if (this.getDisplayName() == null || !this.getDisplayName().equals(valueAsString)) {
                     changed = true;
@@ -457,18 +465,16 @@ public class UserAccount implements Account, ToJson, Processable {
                     this.setPhotoUrl(valueAsString);
                 }
             } else if ("pass".equals(key)) {
-                if (isFederated()) {
-                    return "changing password is not allowed for a federated account";
-                } else valueAsString = value.getAsString();
-                String[] terms = valueAsString.split("|");
+                valueAsString = value.getAsString();
+                String[] terms = valueAsString.split(",");
                 if (terms.length != 2) {
                     return "could not understand value: " + valueAsString
-                            + " correct format: \"<oldpassword>|<newpassword>\"";
+                            + " correct format: \"<oldpassword>,<newpassword>\"";
                 }
                 String oldPass = ("null".equals(terms[0])) ? null : terms[0];
                 String newPass = terms[1];
                 SendAListDAO dao = new SendAListDAO();
-                boolean isOldPassValid = dao.checkPassword(this.getEmail(), oldPass);
+                boolean isOldPassValid = (oldPass == null) ? getEncryptedPassword() == null : dao.checkPassword(this.getEmail(), oldPass);
                 if (!isOldPassValid) {
                     return "previous password was invalid! could not change password";
                 } else {

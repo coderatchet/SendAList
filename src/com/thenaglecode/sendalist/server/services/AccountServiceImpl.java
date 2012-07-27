@@ -41,8 +41,8 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountException(AccountException.ACTION_NOT_ALLOWED);
         }
         try {
-            UserAccount user = new UserAccount();
-            user.setEmail(assertion.getString("email"));
+            if(!assertion.has("email")) return null;
+            UserAccount user = new UserAccount(assertion.getString("email"));
             if (assertion.has("firstName")) {
                 user.setFirstName(assertion.getString("firstName"));
             }
