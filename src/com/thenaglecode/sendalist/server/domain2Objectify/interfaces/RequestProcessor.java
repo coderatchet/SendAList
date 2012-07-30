@@ -1,11 +1,15 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.interfaces;
 
 import com.google.gson.JsonObject;
+import com.googlecode.objectify.Key;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,21 +57,49 @@ public class RequestProcessor {
             } else {
                 try {
                     id = Long.valueOf(i);
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     return "could not parse TaskList id as long: " + i;
                 }
                 taskList = dao.findTaskList(id);
                 if (taskList == null) {
                     return "Could not find TaskList with id: " + id;
                 }
-            }
-            err = taskList.processTransaction(tx);
-            if (!returnedError(err) && !Processable.Nop.equals(err)) {
-                if (!taskList.isSafeToPersist()) {
-                    return "Task list did not have enough information to save correctly";
+
+                if (tx.get("del") == null) {
+                    err = taskList.processTransaction(tx);
+                    if (!returnedError(err) && !Processable.Nop.equals(err)) {
+                        if (!taskList.isSafeToPersist()) {
+                            return "Task list did not have enough information to save correctly";
+                        }
+                        dao.saveTaskList(taskList);
+                    }
+                } else {
+                    //delete the task list
+                    UserAccount owner = dao.findUser(taskList.getOwner().getName());
+                    if (owner == null) {
+                        return "could not find user with email: " + taskList.getOwner().getName();
+                    }
+
+                    List<Key<TaskList>> existingLists = owner.getTaskLists();
+                    Iterator<Key<TaskList>> itr = existingLists.iterator();
+                    Key<TaskList> foundList = null;
+                    while (foundList == null && itr.hasNext()) {
+                        Key<TaskList> existingTaskList = itr.next();
+                        if (existingTaskList.getId() == id) {
+                            foundList = existingTaskList;
+                        }
+                    }
+
+                    if (foundList != null) {
+                        existingLists.remove(foundList);
+                        dao.saveUser(owner);
+                    }
+
+                    dao.deleteTaskList(id);
                 }
-                dao.saveTaskList(taskList);
             }
+
+
         } else if ("USER".equals(c)) {
             UserAccount userAccount;
             if (isNew) {
@@ -85,6 +117,7 @@ public class RequestProcessor {
                 }
                 dao.saveUser(userAccount);
             }
+
         }
         return err;
     }
