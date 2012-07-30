@@ -3,6 +3,7 @@ package com.thenaglecode.sendalist.shared;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * This class is used to determine the origin of the persistent change transaction, whether the request is from a user
@@ -28,6 +29,11 @@ public class OriginatorOfPersistentChange {
     }
 
     public static OriginatorOfPersistentChange getContext(HttpServletRequest req) {
-        return null; //todo implement
+        OriginatorOfPersistentChange context = new OriginatorOfPersistentChange(req);
+        HttpSession session = req.getSession();
+        if(session != null){
+            //todo set the current user
+        }
+        return context;
     }
 }

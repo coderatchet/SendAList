@@ -111,7 +111,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Transactions</servlet-name>
-        <url-pattern>/api</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <listener>
