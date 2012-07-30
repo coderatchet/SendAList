@@ -1,14 +1,17 @@
 Main Page, use case scenarios
 
 //create multiple lists
-
-	{
-		"c":"LIST",
-		"i":"new",
-		"summary":"first list",
-		"owner":"jared@sendalist.com"
-	}
-
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":"new",
+			"summary":"first list",
+			"owner":"jared@sendalist.com"
+		}
+	]
+}
+			
 //create multiple tasks
 
 //rename a task
