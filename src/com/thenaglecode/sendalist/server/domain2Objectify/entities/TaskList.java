@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -185,40 +182,88 @@ public class TaskList implements Processable {
                     setOwner(newKey);
                 }
             } else if ("task".equals(key)) {
-                boolean isNew = false;
-                boolean isDelete = false;
+                if (!value.isJsonArray()) return "incorrect object: (" + value.toString()
+                        + ") correct format: \"[summary(req),[done](opt),[photourl](opt)]\"";
 
                 JsonArray array = value.getAsJsonArray();
-                if(array.size() < 1) return "task transaction does not have any arguments!";
-
                 Iterator<JsonElement> itr = array.iterator();
                 Set<Task> existingTasks = getTasks();
                 Task modTask = null;
-                if(itr.hasNext()){ //parse summary
+                if (itr.hasNext()) { //parse summary
                     JsonElement element = itr.next();
                     String summary = element.getAsString();
-                    for(Task task : existingTasks){
-                        if(task.getSummary().equals(summary)){
+                    for (Task task : existingTasks) {
+                        if (task.getSummary().equals(summary)) {
                             modTask = task;
                         }
                     }
-                    if(modTask == null){
+                    if (modTask == null) {
                         changed = true;
                         modTask = new Task(summary);
                     }
                 }
-                if(itr.hasNext()){
+                if (itr.hasNext()) {
                     JsonElement element = itr.next();
                     boolean newDone = element.getAsBoolean();
-                    if(newDone != modTask.getDone()){
+                    if (newDone != modTask.getDone()) {
                         changed = true;
                         modTask.setDone(newDone);
                     }
                 }
-
-
             } else if ("deltask".equals(key)) {
+                if (unsupported) return "could not support this value type: " + value.toString();
+                if (valueAsString == null) return "value called for field deltask is null!";
 
+                Task toDelete = null;
+                Iterator<Task> itr = this.getTasks().iterator();
+                while (toDelete == null && itr.hasNext()) {
+                    Task existingTask = itr.next();
+                    if (valueAsString.equalsIgnoreCase(existingTask.getSummary())) {
+                        toDelete = existingTask;
+                    }
+                }
+
+                if (toDelete != null) {
+                    changed = true;
+                    getTasks().remove(toDelete);
+                }
+            } else if ("renameTask".equals(key)) {
+                // <oldname>,<newname>
+                if (unsupported) return "the value type is unsupported";
+                if (valueAsString == null) return "the value for field \"renameTask\" is null!";
+
+                String[] terms = valueAsString.split(",");
+                if (terms.length != 2) return "incorrect paramaters: (" + valueAsString
+                        + ") correct format is <oldname>,<newname>";
+
+                String oldName = terms[0];
+                String newName = terms[1];
+
+                if(newName.isEmpty()) return "cannot rename task to empty string";
+
+                Set<Task> existingTasks = getTasks();
+                Iterator<Task> itr = existingTasks.iterator();
+                Task found = null;
+                while (found == null && itr.hasNext()){
+                    Task existingTask = itr.next();
+                    if(oldName.equals(existingTask.getSummary())){
+                        found = existingTask;
+                    }
+                }
+
+                if(found != null){
+                    //check if new name already exists
+                    itr = existingTasks.iterator();
+                    Task foundTwo = null;
+                    while (foundTwo == null && itr.hasNext()){
+                        Task existingTask = itr.next();
+                        if(newName.equals(existingTask.getSummary())){
+                            foundTwo = existingTask;
+                        }
+                    }
+                    if(foundTwo != null) return "task with this name already exists, cannot rename task: \""
+                            + newName + "\"";
+                }
             } else {
                 return "did not understand field for TaskList processing: " + key;
             }
