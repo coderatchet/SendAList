@@ -1,0 +1,24 @@
+signup page
+
+//required fields
+	1. email address (used to login)
+	2. password
+	3. display name
+	
+//optional fields
+	4. first name
+	5. last name
+	6. photo...?
+	
+// example transaction
+
+	//this json object is sent to the ApiServlet
+
+	{
+		"c":"USER",
+		"i":"jared@sendalist.com",
+		"pass":"1234",
+		"displayName":"hullabaloo",
+		"fname":"Jared",
+		"lname":"Nagle",
+	}

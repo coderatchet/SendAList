@@ -1,0 +1,20 @@
+Main Page, use case scenarios
+
+//create multiple lists
+
+	{
+		"c":"LIST",
+		"i":"new",
+		"summary":"first list",
+		"owner":"jared@sendalist.com"
+	}
+
+//create multiple tasks
+
+//rename a task
+
+//delete a task
+
+//rename a list
+
+//delete a list (with and without entries), ensure that the user's relative fields are changed as well.

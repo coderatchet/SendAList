@@ -50,6 +50,29 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping> -->
 
+    <filter>
+        <filter-name>authentication</filter-name>
+        <filter-class>com.thenaglecode.sendalist.server.filters.AuthenticationFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>authentication</filter-name>
+        <url-pattern>/secured/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>hitCounter</filter-name>
+        <filter-class>com.thenaglecode.sendalist.server.filters.HitCountFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>hitCounter</filter-name>
+        <servlet-name>*</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>com.google.apps.easyconnect.easyrp.client.basic.servlet.LoginServlet</servlet-class>
@@ -88,7 +111,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Transactions</servlet-name>
-        <url-pattern>/api</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <listener>
@@ -98,7 +121,7 @@
     </listener>
 
     <welcome-file-list>
-        <welcome-file>SendAList.html</welcome-file>
+        <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 
     <servlet>
