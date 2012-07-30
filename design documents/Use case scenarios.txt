@@ -13,11 +13,58 @@ Main Page, use case scenarios
 }
 			
 //create multiple tasks
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"task":["not done"],
+			"task":["not done also"],
+			"task":["done",true]
+		}
+	]
+}
 
 //rename a task
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"renameTask":"not done,hmmmm"
+		}
+	]
+}
 
 //delete a task
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"deltask":"hmmmm"
+		}
+	]
+}
 
 //rename a list
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"deltask"
+		}
+	]
+}
 
 //delete a list (with and without entries), ensure that the user's relative fields are changed as well.
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"del":true
+		}
+	]
+}
