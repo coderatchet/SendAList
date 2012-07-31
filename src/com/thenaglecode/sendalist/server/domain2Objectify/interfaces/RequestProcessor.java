@@ -2,11 +2,14 @@ package com.thenaglecode.sendalist.server.domain2Objectify.interfaces;
 
 import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Query;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
+import com.thenaglecode.sendalist.shared.dto.ErrorSet;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,82 +38,105 @@ public class RequestProcessor {
      *
      * @param tx      the json transaction with at least a c for the command.
      * @param context the context from which this transaction was sent
-     * @return an error if something was a problem,
-     *         the "{@value Processable#Nop}" string if nothing was changed and null if there was no problem.
+     * @return a json object representing the new or updated resource, a json object stating that the object was deleted
+     *         or an error object stating that there was an error
      */
-    public String processTransaction(@NotNull JsonObject tx, OriginatorOfPersistentChange context) {
+    public JSONObject processTransaction(@NotNull JsonObject tx, OriginatorOfPersistentChange context) {
         boolean isNew = false;
         Long id = -1l;
 
         String c = tx.get("c").getAsString(); //this represents the command, usually the object type
         String i = tx.get("i").getAsString(); //this represents the id or the instruction to create a new object
         SendAListDAO dao = new SendAListDAO();
-        if (c == null) return "Could not read the command";
-        if (i == null) return "Could not read the id";
+        if (c == null) return getError("Could not read the command");
+        if (i == null) return getError("Could not read the id");
         if (i.equals("new")) isNew = true;
 
         String err = null;
         if ("LIST".equals(c)) {
             TaskList taskList;
-            if (isNew) {
-                taskList = new TaskList();
-            } else {
+            if (isNew) taskList = new TaskList();
+            else {
                 try {
                     id = Long.valueOf(i);
                 } catch (NumberFormatException e) {
-                    return "could not parse TaskList id as long: " + i;
+                    return getError("could not parse TaskList id as long: " + i);
                 }
                 taskList = dao.findTaskList(id);
                 if (taskList == null) {
-                    return "Could not find TaskList with id: " + id;
-                }
-
-                if (tx.get("del") == null) {
-                    err = taskList.processTransaction(tx);
-                    if (!returnedError(err) && !Processable.Nop.equals(err)) {
-                        if (!taskList.isSafeToPersist()) {
-                            return "Task list did not have enough information to save correctly";
-                        }
-                        dao.saveTaskList(taskList);
-                    }
-                } else {
-                    //delete the task list
-                    UserAccount owner = dao.findUser(taskList.getOwner().getName());
-                    if (owner == null) {
-                        return "could not find user with email: " + taskList.getOwner().getName();
-                    }
-
-                    List<Key<TaskList>> existingLists = owner.getTaskLists();
-                    Iterator<Key<TaskList>> itr = existingLists.iterator();
-                    Key<TaskList> foundList = null;
-                    while (foundList == null && itr.hasNext()) {
-                        Key<TaskList> existingTaskList = itr.next();
-                        if (existingTaskList.getId() == id) {
-                            foundList = existingTaskList;
-                        }
-                    }
-
-                    if (foundList != null) {
-                        existingLists.remove(foundList);
-                        dao.saveUser(owner);
-                    }
-
-                    dao.deleteTaskList(id);
+                    return getError("Could not find TaskList with id: " + id);
                 }
             }
 
+            if (tx.get("del") == null) {
+                if (tx.get("summary") != null) { //make sure we aren't naming a list after another one of our lists
+                    Query<TaskList> q = dao.ofy().query(TaskList.class);
+                    q.filter("summary", tx.get("summary").getAsString());
+                    Iterator itr = q.iterator();
+                    if (itr.hasNext())                 {
+                        return getError("task list already exists! could not create new list named: "
+                                + tx.get("summary").getAsString());
+                    }
+                }
 
+                err = taskList.processTransaction(tx);
+                if (!returnedError(err)) {
+                    if (!Processable.Nop.equals(err)) {
+                        if (!taskList.isSafeToPersist()) {
+                            return getError("Task list did not have enough information to save correctly");
+                        }
+                        dao.saveTaskList(taskList);
+                        return taskList.toJson();
+                    } else {
+                        return getNotModified(c, i);
+                    }
+                } else {
+                    return getError(err);
+                }
+            } else {
+                //delete the task list
+                UserAccount owner = dao.findUser(taskList.getOwner().getName());
+                if (owner == null) {
+                    return getError(
+                            "could not find user with email: " + taskList.getOwner().getName());
+                }
+
+                List<Key<TaskList>> existingLists = owner.getTaskLists();
+                Iterator<Key<TaskList>> itr = existingLists.iterator();
+                Key<TaskList> foundList = null;
+                while (foundList == null && itr.hasNext()) {
+                    Key<TaskList> existingTaskList = itr.next();
+                    if (existingTaskList.getId() == id) {
+                        foundList = existingTaskList;
+                    }
+                }
+
+                if (foundList != null) {
+                    existingLists.remove(foundList);
+                    dao.saveUser(owner);
+                }
+
+                dao.deleteTaskList(id);
+                return getDeleteSuccess(c, i);
+            }
         } else if ("USER".equals(c)) {
             UserAccount userAccount = dao.findOrCreateUser(i, true);
             err = userAccount.processTransaction(tx);
-            if (!returnedError(err) && !Processable.Nop.equals(err)) {
-                if (!userAccount.isSafeToPersist()) {
-                    return "Task list did not have enough information to save correctly";
+
+            if (!returnedError(err)) {
+                if (!Processable.Nop.equals(err)) {
+                    if (!userAccount.isSafeToPersist()) {
+                        return getError(
+                                "Task list did not have enough information to save correctly");
+                    }
+                    dao.saveUser(userAccount);
+                    return userAccount.toJson();
+                } else {
+                    return getNotModified(c, i);
                 }
-                dao.saveUser(userAccount);
-            }
-        }
-        return err;
+            } else if (returnedError(err)) return getError(err);
+        } else return getError("did not understand request type");
+        return getError("unknown error occured in RequestProcessor");
     }
 
     /**
@@ -122,5 +148,17 @@ public class RequestProcessor {
      */
     public static boolean returnedError(String err) {
         return err != null && !Processable.Nop.equals(err);
+    }
+
+    private JSONObject getDeleteSuccess(@NotNull String type, @NotNull String id) {
+        return new ErrorSet(200, "success", "successfully deleted entity: [" + type + ":" + id + "]");
+    }
+
+    private JSONObject getError(@NotNull String err) {
+        return new ErrorSet(400, "Bad Request", err);
+    }
+
+    private JSONObject getNotModified(@NotNull String type, @NotNull String id) {
+        return new ErrorSet(304, "Not Modified", "the transaction did nothing to [" + type + ":" + id + "]");
     }
 }

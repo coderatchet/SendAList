@@ -1,1 +1,1 @@
-{"txs":[{"c":"LIST","i":1234,"task":["not done"],"task":["not done also"],"task":["done",true]}]}
+{"txs":[{"c":"LIST","i":1234,"tasks":[{"summary":"not done"},{"summary":"done", "done":true},{"summary":"done also", "done":true}]}]}

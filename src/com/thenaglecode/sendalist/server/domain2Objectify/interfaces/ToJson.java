@@ -1,5 +1,7 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.interfaces;
 
+import org.json.JSONObject;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jared Nagle
@@ -9,5 +11,5 @@ package com.thenaglecode.sendalist.server.domain2Objectify.interfaces;
  * put this on objects you wish to be serialised to Json.
  */
 public interface ToJson {
-    public String toJson();
+    public JSONObject toJson();
 }

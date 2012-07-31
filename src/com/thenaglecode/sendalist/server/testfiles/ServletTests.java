@@ -88,8 +88,9 @@ public class ServletTests {
             transaction = requestJson.toString();
             System.out.println("\nattempting transaction: ");
             System.out.println(requestJson.toString(2));
-            responseJson = new JSONObject(doPostWithThisData(transaction));
-            System.out.println("response: " + responseJson.toString(2));
+            String responseData = doPostWithThisData(transaction);
+            responseJson = new JSONObject(responseData);
+            System.out.println("\nresponse from servlet: " + responseJson.toString(2));
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -118,9 +119,8 @@ public class ServletTests {
             System.out.println("\nattempting transaction: ");
             System.out.println(requestJson.toString(2));
             responseJson = new JSONObject(doPostWithThisData(transaction));
-            System.out.println("\nresponse: ");
+            System.out.println("\nresponse from servlet: ");
             System.out.println(responseJson.toString(2));
-            testAllResponseSuccess(responseJson);
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -150,7 +150,7 @@ public class ServletTests {
     }
 
     private void testAllResponseSuccess(JSONObject responseJson) {
-        if (!responseJson.has("errors")) fail("the response did not contain a list of errorSets!");
+        if (!responseJson.has("response")) fail("the response did not contain a list of errorSets!");
         try {
             JSONArray array = responseJson.getJSONArray("errors");
             for (int i = 0; i < array.length(); i++) {
@@ -189,7 +189,8 @@ public class ServletTests {
     private String getTextFromFile(String fileName) {
         try {
             File file = new File(".");
-            System.out.println(file.getCanonicalPath() + "\\src\\com\\thenaglecode\\sendalist\\server\\testfiles\\" + fileName);
+            System.out.println("transaction object obtained from...");
+            System.out.println("\t" + file.getCanonicalPath() + "\\src\\com\\thenaglecode\\sendalist\\server\\testfiles\\" + fileName);
             FileInputStream is = new FileInputStream(file.getCanonicalPath() + "\\src\\com\\thenaglecode\\sendalist\\server\\testfiles\\" + fileName);
             return new Scanner(is).useDelimiter("\\A").next();
         } catch (NoSuchElementException e) {

@@ -1,20 +1,25 @@
 package com.thenaglecode.sendalist.server.servlets;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
 import com.thenaglecode.sendalist.shared.dto.ErrorSet;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import static com.thenaglecode.sendalist.shared.dto.ErrorSet.UNKNOWN_FORMAT_ERROR;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,8 +48,6 @@ import java.util.List;
 public class TransactionServlet extends HttpServlet {
 
     public static final String PRETTY_JSON_HEADER = "Json-Response-Format";
-    public static final ErrorSet UNKNOWN_FORMAT_ERROR = new ErrorSet(400, "unknown request format!",
-            "the request was not in the correct format, please consult the api documentation for the desired formats");
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
@@ -64,35 +67,33 @@ public class TransactionServlet extends HttpServlet {
             JsonElement root = new JsonParser().parse(reader);
             PrintWriter writer = res.getWriter();
 
+            JSONArray responses = new JSONArray();
             if (!root.isJsonObject()) {
                 //incorrect format
-                writer.append(getReturnData(Arrays.asList(UNKNOWN_FORMAT_ERROR), isPrettyJson));
-                res.flushBuffer();
-                return;
+                responses.put(UNKNOWN_FORMAT_ERROR);
             }
 
-            JsonElement txsElement = root.getAsJsonObject().get("txs");
-            List<ErrorSet> errorSets = new ArrayList<ErrorSet>();
-            if (txsElement == null || (!txsElement.isJsonArray() && !txsElement.isJsonObject())) {
-                //incorrect format
-                writer.append(getReturnData(Arrays.asList(UNKNOWN_FORMAT_ERROR), isPrettyJson));
-                res.flushBuffer();
-                return;
-            } else if (txsElement.isJsonArray()) {
-                //process each one
-                JsonArray array = txsElement.getAsJsonArray();
-                for (JsonElement element : array) {
-                    if (!element.isJsonObject()) errorSets.add(UNKNOWN_FORMAT_ERROR);
-                    else errorSets.add(processTransaction(element.getAsJsonObject(), context));
+            if (responses.length() == 0) {
+                JsonElement txsElement = root.getAsJsonObject().get("txs");
+                if (txsElement == null || (!txsElement.isJsonArray() && !txsElement.isJsonObject())) {
+                    //incorrect format
+                    responses.put(UNKNOWN_FORMAT_ERROR);
+                } else if (txsElement.isJsonArray()) {
+                    //process each one
+                    JsonArray array = txsElement.getAsJsonArray();
+                    for (JsonElement element : array) {
+                        if (!element.isJsonObject()) responses.put(UNKNOWN_FORMAT_ERROR);
+                        else responses.put(processTransaction(element.getAsJsonObject(), context));
+                    }
+                } else if (txsElement.isJsonObject()) {
+                    //process singular transaction
+                    responses.put(processTransaction(txsElement.getAsJsonObject(), context));
                 }
-            } else if (txsElement.isJsonObject()) {
-                //process singular transaction
-                errorSets.add(processTransaction(txsElement.getAsJsonObject(), context));
             }
 
             //return results
             res.setContentType("application/json");
-            writer.append(getReturnData(errorSets, isPrettyJson));
+            writer.append(getReturnData(responses, isPrettyJson));
             res.flushBuffer();
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,44 +101,30 @@ public class TransactionServlet extends HttpServlet {
     }
 
     @NotNull
-    ErrorSet processTransaction(JsonObject tx, OriginatorOfPersistentChange context) {
-        ErrorSet errorSet = new ErrorSet();
-        RequestProcessor processor = new RequestProcessor();
-        String err = processor.processTransaction(tx, context);
-        if (null == err) {
-            errorSet.setCode(HttpServletResponse.SC_OK);
-            errorSet.setMessage("Success");
-        } else {
-            if (RequestProcessor.returnedError(err)) {
-                errorSet.setCode(HttpServletResponse.SC_BAD_REQUEST);
-                errorSet.setMessage("Bad Request");
-                errorSet.setReason(err);
-            } else {
-                errorSet.setCode(HttpServletResponse.SC_NOT_MODIFIED);
-                errorSet.setReason("No Change");
-            }
-        }
-        return errorSet;
+    JSONObject processTransaction(JsonObject tx, OriginatorOfPersistentChange context) {
+        return new RequestProcessor().processTransaction(tx, context);
     }
 
     /**
      * converts the list of errors into a string suitable for return to the client
-     * @param errors the list of errors to return corresponding to each transaction
-     * @param pretty whether the response is compact or pretty (legible)
+     *
+     * @param responses the list of errors to return corresponding to each transaction
+     * @param pretty    whether the response is compact or pretty (legible)
      * @return the errors in a json format { "errors":[{//error 1},{//error 2},...]}
      */
-    public String getReturnData(@NotNull List<ErrorSet> errors, boolean pretty) {
-        Gson gson = (pretty) ? new GsonBuilder().setPrettyPrinting().create() : new GsonBuilder().create();
-        JsonObject root = new JsonObject();
-        JsonArray errorArray = new JsonArray();
-        if (errors.size() == 0) {
-            errorArray.add(new ErrorSet(400, "That's odd, no error sets.", null).toJson());
-        } else {
-            for (ErrorSet errorSet : errors) {
-                errorArray.add(errorSet.toJson());
+    public String getReturnData(@NotNull JSONArray responses, boolean pretty) {
+        JSONObject root = new JSONObject();
+        try {
+            if (responses.length() == 0) {
+                responses.put(new ErrorSet(400, "That's odd, no responses.", null));
+            } else {
+                root.put("responses", responses);
+                return (pretty) ? root.toString(2) : root.toString();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        root.add("errors", errorArray);
-        return gson.toJson(root);
+        return new ErrorSet(500, "Server Error",
+                "Something terrible has happened in the TransactionServlet").toString();
     }
 }

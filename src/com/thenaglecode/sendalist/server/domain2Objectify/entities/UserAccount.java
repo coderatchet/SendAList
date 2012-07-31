@@ -13,6 +13,8 @@ import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
@@ -258,15 +260,20 @@ public class UserAccount implements Account, ToJson, Processable {
      * @return a formatted json object representing this user
      */
     @Override
-    public String toJson() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty(FIELD_ID, getEmail());
-        if (getFirstName() != null) obj.addProperty(FIELD_FIRST, getFirstName());
-        if (getLastName() != null) obj.addProperty(FIELD_LAST, getLastName());
-        if (getDisplayName() != null) obj.addProperty(FIELD_DISPLAY, getDisplayName());
-        if (getPhotoUrl() != null) obj.addProperty(FIELD_PIC_URL, getPhotoUrl());
-        obj.addProperty(FIELD_FED, isFederated());
-        return obj.toString();
+    public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(FIELD_ID, getEmail());
+            if (getFirstName() != null) obj.put(FIELD_FIRST, getFirstName());
+            if (getLastName() != null) obj.put(FIELD_LAST, getLastName());
+            if (getDisplayName() != null) obj.put(FIELD_DISPLAY, getDisplayName());
+            if (getPhotoUrl() != null) obj.put(FIELD_PIC_URL, getPhotoUrl());
+            obj.put(FIELD_FED, isFederated());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
     }
 
     /**
@@ -505,13 +512,15 @@ public class UserAccount implements Account, ToJson, Processable {
 
     /**
      * checks the password using the Password Encryptor.
+     *
      * @param plainTextPass the password to check against the encrypted password
      * @return true if the same, false if not.
      */
     public boolean checkPassword(@Nullable String plainTextPass) {
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         if (encryptedPassword == null) return plainTextPass == null;
-        else return plainTextPass != null && passwordEncryptor.checkPassword(getPS() + plainTextPass, encryptedPassword);
+        else
+            return plainTextPass != null && passwordEncryptor.checkPassword(getPS() + plainTextPass, encryptedPassword);
     }
 
 }

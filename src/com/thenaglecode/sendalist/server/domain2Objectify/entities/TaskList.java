@@ -6,7 +6,10 @@ import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
+import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
@@ -19,6 +22,11 @@ import java.util.*;
  * Time: 8:13 PM
  */
 public class TaskList implements Processable {
+
+    public static final String FIELD_ID = "id"; //read-only
+    public static final String FIELD_SUMMARY = "summary"; //writable
+    public static final String FIELD_TASKS = "tasks"; //read-only
+    public static final String FIELD_OWNER = "owner"; //read-only
 
     @Id
     public Long id;
@@ -181,33 +189,38 @@ public class TaskList implements Processable {
                     Key<UserAccount> newKey = new Key<UserAccount>(UserAccount.class, valueAsString);
                     setOwner(newKey);
                 }
-            } else if ("task".equals(key)) {
+            } else if ("tasks".equals(key)) {
                 if (!value.isJsonArray()) return "incorrect object: (" + value.toString()
                         + ") correct format: \"[summary(req),[done](opt),[photourl](opt)]\"";
 
-                JsonArray array = value.getAsJsonArray();
-                Iterator<JsonElement> itr = array.iterator();
-                Set<Task> existingTasks = getTasks();
-                Task modTask = null;
-                if (itr.hasNext()) { //parse summary
-                    JsonElement element = itr.next();
-                    String summary = element.getAsString();
-                    for (Task task : existingTasks) {
-                        if (task.getSummary().equals(summary)) {
-                            modTask = task;
+                JsonArray rootArray = value.getAsJsonArray();
+                for (JsonElement rootElement : rootArray) {
+                    if (!rootElement.isJsonArray())
+                        return "could not understand tasks object: " + rootElement.toString();
+                    JsonArray array = rootElement.getAsJsonArray();
+                    Set<Task> existingTasks = getTasks();
+                    Task modTask = null;
+                    Iterator<JsonElement> taskItr = array.iterator();
+                    if (taskItr.hasNext()) { //parse summary
+                        JsonElement element = taskItr.next();
+                        String summary = element.getAsString();
+                        for (Task task : existingTasks) {
+                            if (task.getSummary().equals(summary)) {
+                                modTask = task;
+                            }
+                        }
+                        if (modTask == null) {
+                            changed = true;
+                            modTask = new Task(summary);
                         }
                     }
-                    if (modTask == null) {
-                        changed = true;
-                        modTask = new Task(summary);
-                    }
-                }
-                if (itr.hasNext()) {
-                    JsonElement element = itr.next();
-                    boolean newDone = element.getAsBoolean();
-                    if (newDone != modTask.getDone()) {
-                        changed = true;
-                        modTask.setDone(newDone);
+                    String err = modTask.processTransaction(tx);
+                    if(RequestProcessor.returnedError(err)){
+                        if(!Processable.Nop.equals(err)){
+                            if(modTask.isSafeToPersist()){
+
+                            }
+                        }
                     }
                 }
             } else if ("deltask".equals(key)) {
@@ -239,29 +252,29 @@ public class TaskList implements Processable {
                 String oldName = terms[0];
                 String newName = terms[1];
 
-                if(newName.isEmpty()) return "cannot rename task to empty string";
+                if (newName.isEmpty()) return "cannot rename task to empty string";
 
                 Set<Task> existingTasks = getTasks();
                 Iterator<Task> itr = existingTasks.iterator();
                 Task found = null;
-                while (found == null && itr.hasNext()){
+                while (found == null && itr.hasNext()) {
                     Task existingTask = itr.next();
-                    if(oldName.equals(existingTask.getSummary())){
+                    if (oldName.equals(existingTask.getSummary())) {
                         found = existingTask;
                     }
                 }
 
-                if(found != null){
+                if (found != null) {
                     //check if new name already exists
                     itr = existingTasks.iterator();
                     Task foundTwo = null;
-                    while (foundTwo == null && itr.hasNext()){
+                    while (foundTwo == null && itr.hasNext()) {
                         Task existingTask = itr.next();
-                        if(newName.equals(existingTask.getSummary())){
+                        if (newName.equals(existingTask.getSummary())) {
                             foundTwo = existingTask;
                         }
                     }
-                    if(foundTwo != null) return "task with this name already exists, cannot rename task: \""
+                    if (foundTwo != null) return "task with this name already exists, cannot rename task: \""
                             + newName + "\"";
                 }
             } else {
@@ -290,5 +303,20 @@ public class TaskList implements Processable {
             }
         }
         return isSafe;
+    }
+
+    public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(FIELD_ID, String.valueOf(this.getId()));
+            if (getSummary() != null) obj.put(FIELD_SUMMARY, this.getSummary());
+            if (getOwner() != null) obj.put(FIELD_OWNER, this.getOwner().getName());
+
+            //put tasks in array
+            return obj;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
