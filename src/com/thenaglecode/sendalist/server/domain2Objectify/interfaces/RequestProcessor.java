@@ -42,7 +42,7 @@ public class RequestProcessor {
         boolean isNew = false;
         Long id = -1l;
 
-        String c = tx.get("c").getAsString(); //this represents the command, usually the object type.
+        String c = tx.get("c").getAsString(); //this represents the command, usually the object type
         String i = tx.get("i").getAsString(); //this represents the id or the instruction to create a new object
         SendAListDAO dao = new SendAListDAO();
         if (c == null) return "Could not read the command";
@@ -101,15 +101,7 @@ public class RequestProcessor {
 
 
         } else if ("USER".equals(c)) {
-            UserAccount userAccount;
-            if (isNew) {
-                userAccount = new UserAccount();
-            } else {
-                userAccount = dao.findUser(i);
-                if (userAccount == null) {
-                    return "Could not find UserAccount with id: " + i;
-                }
-            }
+            UserAccount userAccount = dao.findOrCreateUser(i, true);
             err = userAccount.processTransaction(tx);
             if (!returnedError(err) && !Processable.Nop.equals(err)) {
                 if (!userAccount.isSafeToPersist()) {
@@ -117,7 +109,6 @@ public class RequestProcessor {
                 }
                 dao.saveUser(userAccount);
             }
-
         }
         return err;
     }

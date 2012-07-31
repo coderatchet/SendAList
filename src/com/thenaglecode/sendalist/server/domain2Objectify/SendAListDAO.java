@@ -133,7 +133,7 @@ public class SendAListDAO extends DAOBase {
             BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
             //we add the salt and then check for
             return passwordEncryptor.checkPassword(user.getPS() + password, user.getEncryptedPassword());
-        } else return false;
+        } else return password == null;
     }
 
     public void deleteTaskList(long id) {

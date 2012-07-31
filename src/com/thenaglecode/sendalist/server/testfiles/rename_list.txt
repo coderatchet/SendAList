@@ -1,0 +1,9 @@
+{
+	"txs":[
+		{
+			"c":"LIST",
+			"i":1234,
+			"summary":"new summary here"
+		}
+	]
+}

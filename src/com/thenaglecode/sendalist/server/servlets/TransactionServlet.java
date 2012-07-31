@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
+import com.thenaglecode.sendalist.shared.dto.ErrorSet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServlet;
@@ -138,38 +139,5 @@ public class TransactionServlet extends HttpServlet {
         }
         root.add("errors", errorArray);
         return gson.toJson(root);
-    }
-
-    public static class ErrorSet {
-
-        public int code;
-        public String message;
-        public String reason = null;
-
-        public ErrorSet() {
-        }
-
-        public ErrorSet(int code, String message, String reason) {
-            this.code = code;
-            this.message = message;
-            this.reason = reason;
-        }
-
-        public void setCode(int code) {
-            this.code = code;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public void setReason(String reason) {
-            this.reason = reason;
-        }
-
-        public JsonObject toJson() {
-            Gson gson = new GsonBuilder().create();
-            return (JsonObject) gson.toJsonTree(this);
-        }
     }
 }

@@ -12,6 +12,7 @@ import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
@@ -27,7 +28,15 @@ import java.util.Map;
 
 public class UserAccount implements Account, ToJson, Processable {
     private static UserAccount testUser = new UserAccount();
-    private static final int SALT_LENGTH = 10;
+    public static final int SALT_LENGTH = 10;
+    public static final String FIELD_CLASS = "c"; //not displayed
+    public static final String FIELD_ID = "i"; //read-only
+    public static final String FIELD_FIRST = "fname"; //writable
+    public static final String FIELD_LAST = "lname"; //writable
+    public static final String FIELD_PASS = "pass"; //not displayed //writable
+    public static final String FIELD_DISPLAY = "display"; //writable
+    public static final String FIELD_PIC_URL = "picurl"; //writable
+    public static final String FIELD_FED = "isfed"; //read-only
 
     static {
         testUser.setEmail("test@sendalist.com");
@@ -251,12 +260,12 @@ public class UserAccount implements Account, ToJson, Processable {
     @Override
     public String toJson() {
         JsonObject obj = new JsonObject();
-        obj.addProperty("email", getEmail());
-        if (getFirstName() != null) obj.addProperty("firstName", getFirstName());
-        if (getLastName() != null) obj.addProperty("lastName", getLastName());
-        if (getDisplayName() != null) obj.addProperty("displayName", getDisplayName());
-        if (getPhotoUrl() != null) obj.addProperty("photoUrl", getPhotoUrl());
-        obj.addProperty("isFederated", isFederated());
+        obj.addProperty(FIELD_ID, getEmail());
+        if (getFirstName() != null) obj.addProperty(FIELD_FIRST, getFirstName());
+        if (getLastName() != null) obj.addProperty(FIELD_LAST, getLastName());
+        if (getDisplayName() != null) obj.addProperty(FIELD_DISPLAY, getDisplayName());
+        if (getPhotoUrl() != null) obj.addProperty(FIELD_PIC_URL, getPhotoUrl());
+        obj.addProperty(FIELD_FED, isFederated());
         return obj.toString();
     }
 
@@ -418,57 +427,44 @@ public class UserAccount implements Account, ToJson, Processable {
             boolean couldNotParse = false;
             String valueAsString = null;
 
-            if ("c".equals(key) || "i".equals(key)) {
+            if (FIELD_CLASS.equals(key) || FIELD_ID.equals(key)) {
                 //do nothing
-            } else if ("email".equals(key)){
-                valueAsString = value.getAsString();
-                JsonElement id = tx.get("i");
-                boolean isNew = "new".equals(id.getAsString());
-                if (isNew && this.getEmail() == null){
-                    changed = true;
-                    //todo email validation
-                    setEmail(valueAsString);
-                }
-                else {
-                    return "cannot change email of existing user";
-                }
-            } else if ("displayName".equals(key)) {
+            } else if (FIELD_DISPLAY.equals(key)) {
                 valueAsString = value.getAsString();
                 if (this.getDisplayName() == null || !this.getDisplayName().equals(valueAsString)) {
                     changed = true;
                     this.setDisplayName(valueAsString);
                 }
-            } else if ("fname".equals(key)) {
+            } else if (FIELD_FIRST.equals(key)) {
                 valueAsString = value.getAsString();
                 if (this.getFirstName() == null || !this.getFirstName().equals(valueAsString)) {
                     changed = true;
                     this.setFirstName(valueAsString);
                 }
-            } else if ("lname".equals(key)) {
+            } else if (FIELD_LAST.equals(key)) {
                 valueAsString = value.getAsString();
                 if (this.getLastName() == null || !this.getLastName().equals(valueAsString)) {
                     changed = true;
                     this.setLastName(valueAsString);
                 }
-            } else if ("picurl".equals(key)) {
+            } else if (FIELD_PIC_URL.equals(key)) {
                 valueAsString = value.getAsString();
                 if (this.getPhotoUrl() == null || !this.getPhotoUrl().equals(valueAsString)) {
                     changed = true;
                     this.setPhotoUrl(valueAsString);
                 }
-            } else if ("pass".equals(key)) {
-                if (isFederated()) {
-                    return "changing password is not allowed for a federated account";
-                } else valueAsString = value.getAsString();
-                String[] terms = valueAsString.split("|");
+            } else if (FIELD_PASS.equals(key)) {
+                valueAsString = value.getAsString();
+                String[] terms = valueAsString.split(",");
                 if (terms.length != 2) {
                     return "could not understand value: " + valueAsString
-                            + " correct format: \"<oldpassword>|<newpassword>\"";
+                            + " correct format: \"<oldpassword>,<newpassword>\"";
+                } else if (isFederated() && !"new".equals(terms[0])) {
+                    return "changing password is not allowed for a federated account";
                 }
-                String oldPass = ("null".equals(terms[0])) ? null : terms[0];
+                String oldPass = ("null".equalsIgnoreCase(terms[0]) || "new".equalsIgnoreCase(terms[0])) ? null : terms[0];
                 String newPass = terms[1];
-                SendAListDAO dao = new SendAListDAO();
-                boolean isOldPassValid = dao.checkPassword(this.getEmail(), oldPass);
+                boolean isOldPassValid = checkPassword(oldPass);
                 if (!isOldPassValid) {
                     return "previous password was invalid! could not change password";
                 } else {
@@ -489,7 +485,7 @@ public class UserAccount implements Account, ToJson, Processable {
         SendAListDAO dao = new SendAListDAO();
         for (Key<TaskList> key : this.getTaskLists()) {
             TaskList list = dao.findTaskList(key.getId());
-            if(list != null) dao.deleteTaskList(list.getId());
+            if (list != null) dao.deleteTaskList(list.getId());
         }
 
 
@@ -501,9 +497,21 @@ public class UserAccount implements Account, ToJson, Processable {
      */
     public boolean isSafeToPersist() {
         boolean safe = this.getEmail() != null;
-        if(!isFederated()){
+        if (!isFederated()) {
             safe = safe && this.getEncryptedPassword() != null;
         }
         return safe;
     }
+
+    /**
+     * checks the password using the Password Encryptor.
+     * @param plainTextPass the password to check against the encrypted password
+     * @return true if the same, false if not.
+     */
+    public boolean checkPassword(@Nullable String plainTextPass) {
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        if (encryptedPassword == null) return plainTextPass == null;
+        else return plainTextPass != null && passwordEncryptor.checkPassword(getPS() + plainTextPass, encryptedPassword);
+    }
+
 }
