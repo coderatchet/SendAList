@@ -8,6 +8,7 @@ import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.RequestProcessor;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,17 +23,17 @@ import java.util.*;
  * Time: 8:13 PM
  */
 public class TaskList implements Processable {
-
-    public static final String FIELD_ID = "id"; //read-only
     public static final String FIELD_SUMMARY = "summary"; //writable
     public static final String FIELD_TASKS = "tasks"; //read-only
     public static final String FIELD_OWNER = "owner"; //read-only
+    public static final String FIELD_DEL_TASK = "deltask"; //used to delete a task
+    public static final String FIELD_RENAME_TASK = "renametask"; //used to rename a task
 
     @Id
     public Long id;
     String summary;
     @Embedded
-    private Set<Task> tasks = null;
+    private List<Task> tasks = null;
     private Key<UserAccount> owner = null;
 
     public TaskList() {
@@ -46,11 +47,16 @@ public class TaskList implements Processable {
         return id;
     }
 
+    /** set the summary/title of this task list
+     * @param summary the new summary for this task list.
+     * @return this TaskList, Daisy chain style*/
     public TaskList setSummary(String summary) {
         this.summary = summary;
         return this;
     }
 
+    /** return the summary/title of this task list
+     * @return the summary/title of this task list */
     public String getSummary() {
         return summary;
     }
@@ -65,15 +71,15 @@ public class TaskList implements Processable {
      * @return list of embedded tasks
      */
     @NotNull
-    public Set<Task> getTasks() {
+    public List<Task> getTasks() {
         if (tasks == null) {
-            tasks = new TreeSet<Task>();
+            tasks = new ArrayList<Task>();
         }
         return tasks;
     }
 
     public TaskList addTask(@NotNull Task taskToAdd) {
-        Set<Task> tasks = getTasks();
+        List<Task> tasks = getTasks();
         boolean found = false;
         for (Task task : tasks) {
             if (task.equals(taskToAdd)) {
@@ -93,7 +99,7 @@ public class TaskList implements Processable {
     }
 
     public TaskList deleteTask(@NotNull String taskToDelete) {
-        Set<Task> tasks = getTasks();
+        List<Task> tasks = getTasks();
         for (Task task : tasks) {
             if (task.getSummary().equals(taskToDelete)) {
                 return deleteTask(task);
@@ -103,7 +109,7 @@ public class TaskList implements Processable {
     }
 
     public TaskList deleteTask(@NotNull Task task) {
-        Set<Task> tasks = getTasks();
+        List<Task> tasks = getTasks();
         if (tasks.contains(task)) {
             tasks.remove(task);
         }
@@ -118,7 +124,7 @@ public class TaskList implements Processable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n'-->Summary: ").append(summary);
-        Set<Task> tasks = getTasks();
+        List<Task> tasks = getTasks();
         for (Task task : tasks) {
             sb.append("\n\t").append(task.getSummary());
             sb.append(" is ").append((task.getDone()) ? "done" : "not done");
@@ -134,7 +140,7 @@ public class TaskList implements Processable {
     public String toHtmlList() {
         StringBuilder sb = new StringBuilder();
         sb.append("<h3>-->Summary: ").append(summary).append("</h3>");
-        Set<Task> tasks = getTasks();
+        List<Task> tasks = getTasks();
         if (tasks.size() > 0) {
             sb.append("<ul>");
             for (Task task : tasks) {
@@ -146,8 +152,6 @@ public class TaskList implements Processable {
         }
         return sb.toString();
     }
-
-    private final String VALUE_PARSE_PROBLEM = "problem translating the value";
 
     /**
      * {@inheritDoc}
@@ -163,22 +167,24 @@ public class TaskList implements Processable {
             boolean unsupported = false;
             String valueAsString = null;
             try {
-                valueAsString = value.getAsString();
+                if(value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
+                    valueAsString = value.getAsString();
             } catch (ClassCastException e) {
                 couldNotParse = true;
             } catch (UnsupportedOperationException e) {
                 unsupported = true;
             }
 
-            if ("c".equals(key) || "i".equals(key)) {
+            String VALUE_PARSE_PROBLEM = "problem translating the value";
+            if (FIELD_TYPE.equals(key) || FIELD_ID.equals(key)) {
                 //do nothing
-            } else if ("summary".equals(key)) {
+            } else if (FIELD_SUMMARY.equals(key)) {
                 if (couldNotParse) return VALUE_PARSE_PROBLEM;
                 else if (this.getSummary() == null || !this.getSummary().equals(valueAsString)) {
                     changed = true;
                     setSummary(valueAsString);
                 }
-            } else if ("owner".equals(key)) {
+            } else if (FIELD_OWNER.equals(key)) {
                 SendAListDAO dao = new SendAListDAO();
                 if (couldNotParse) return VALUE_PARSE_PROBLEM;
                 Key existingKey = getOwner();
@@ -189,21 +195,28 @@ public class TaskList implements Processable {
                     Key<UserAccount> newKey = new Key<UserAccount>(UserAccount.class, valueAsString);
                     setOwner(newKey);
                 }
-            } else if ("tasks".equals(key)) {
+            } else if (FIELD_TASKS.equals(key)) {
                 if (!value.isJsonArray()) return "incorrect object: (" + value.toString()
                         + ") correct format: \"[summary(req),[done](opt),[photourl](opt)]\"";
 
                 JsonArray rootArray = value.getAsJsonArray();
                 for (JsonElement rootElement : rootArray) {
-                    if (!rootElement.isJsonArray())
+                    if (!rootElement.isJsonObject())
                         return "could not understand tasks object: " + rootElement.toString();
-                    JsonArray array = rootElement.getAsJsonArray();
-                    Set<Task> existingTasks = getTasks();
+                    JsonObject taskObject = rootElement.getAsJsonObject();
+                    List<Task> existingTasks = getTasks();
                     Task modTask = null;
-                    Iterator<JsonElement> taskItr = array.iterator();
-                    if (taskItr.hasNext()) { //parse summary
-                        JsonElement element = taskItr.next();
-                        String summary = element.getAsString();
+                    boolean newTask = false;
+                    if (!taskObject.has(Task.FIELD_SUMMARY)) {
+                        return "task did not have the required " + FIELD_SUMMARY + " field: " + taskObject.toString();
+                    }
+                    else if(!taskObject.get(FIELD_SUMMARY).isJsonPrimitive() &&
+                            !taskObject.get(FIELD_SUMMARY).getAsJsonPrimitive().isString()){
+                        return FIELD_SUMMARY + " value is not a string: " + taskObject.toString();
+                    }
+                    else {
+                        //parse summary
+                        String summary = taskObject.get(FIELD_SUMMARY).getAsString();
                         for (Task task : existingTasks) {
                             if (task.getSummary().equals(summary)) {
                                 modTask = task;
@@ -211,21 +224,25 @@ public class TaskList implements Processable {
                         }
                         if (modTask == null) {
                             changed = true;
+                            newTask = true;
                             modTask = new Task(summary);
                         }
                     }
-                    String err = modTask.processTransaction(tx);
+                    String err = modTask.processTransaction(taskObject);
                     if(RequestProcessor.returnedError(err)){
-                        if(!Processable.Nop.equals(err)){
-                            if(modTask.isSafeToPersist()){
-
-                            }
+                        return err;
+                    }
+                    else {
+                        if(!modTask.isSafeToPersist()) return "the task was missing some required fields: "
+                            + taskObject.toString();
+                        if(err == null || newTask){
+                            getTasks().add(modTask);
                         }
                     }
                 }
-            } else if ("deltask".equals(key)) {
+            } else if (FIELD_DEL_TASK.equals(key)) {
                 if (unsupported) return "could not support this value type: " + value.toString();
-                if (valueAsString == null) return "value called for field deltask is null!";
+                if (valueAsString == null) return "value called for field " + FIELD_DEL_TASK + " is null!";
 
                 Task toDelete = null;
                 Iterator<Task> itr = this.getTasks().iterator();
@@ -240,7 +257,7 @@ public class TaskList implements Processable {
                     changed = true;
                     getTasks().remove(toDelete);
                 }
-            } else if ("renameTask".equals(key)) {
+            } else if (FIELD_RENAME_TASK.equals(key)) {
                 // <oldname>,<newname>
                 if (unsupported) return "the value type is unsupported";
                 if (valueAsString == null) return "the value for field \"renameTask\" is null!";
@@ -250,11 +267,11 @@ public class TaskList implements Processable {
                         + ") correct format is <oldname>,<newname>";
 
                 String oldName = terms[0];
-                String newName = terms[1];
+                String newSummary = terms[1];
 
-                if (newName.isEmpty()) return "cannot rename task to empty string";
+                if (newSummary.isEmpty()) return "cannot rename task to empty string";
 
-                Set<Task> existingTasks = getTasks();
+                List<Task> existingTasks = getTasks();
                 Iterator<Task> itr = existingTasks.iterator();
                 Task found = null;
                 while (found == null && itr.hasNext()) {
@@ -270,12 +287,16 @@ public class TaskList implements Processable {
                     Task foundTwo = null;
                     while (foundTwo == null && itr.hasNext()) {
                         Task existingTask = itr.next();
-                        if (newName.equals(existingTask.getSummary())) {
+                        if (newSummary.equals(existingTask.getSummary())) {
                             foundTwo = existingTask;
                         }
                     }
                     if (foundTwo != null) return "task with this name already exists, cannot rename task: \""
-                            + newName + "\"";
+                            + newSummary + "\"";
+                    else {
+                        changed = true;
+                        found.setSummary(newSummary);
+                    }
                 }
             } else {
                 return "did not understand field for TaskList processing: " + key;
@@ -311,7 +332,13 @@ public class TaskList implements Processable {
             obj.put(FIELD_ID, String.valueOf(this.getId()));
             if (getSummary() != null) obj.put(FIELD_SUMMARY, this.getSummary());
             if (getOwner() != null) obj.put(FIELD_OWNER, this.getOwner().getName());
-
+            if (getTasks().size() > 0){
+                JSONArray taskArray = new JSONArray();
+                for (Task task : getTasks()){
+                    taskArray.put(task.toJson());
+                }
+                obj.put(FIELD_TASKS, taskArray);
+            }
             //put tasks in array
             return obj;
         } catch (JSONException e) {

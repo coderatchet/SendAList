@@ -31,8 +31,6 @@ import java.util.Map;
 public class UserAccount implements Account, ToJson, Processable {
     private static UserAccount testUser = new UserAccount();
     public static final int SALT_LENGTH = 10;
-    public static final String FIELD_CLASS = "c"; //not displayed
-    public static final String FIELD_ID = "i"; //read-only
     public static final String FIELD_FIRST = "fname"; //writable
     public static final String FIELD_LAST = "lname"; //writable
     public static final String FIELD_PASS = "pass"; //not displayed //writable
@@ -434,7 +432,7 @@ public class UserAccount implements Account, ToJson, Processable {
             boolean couldNotParse = false;
             String valueAsString = null;
 
-            if (FIELD_CLASS.equals(key) || FIELD_ID.equals(key)) {
+            if (FIELD_TYPE.equals(key) || FIELD_ID.equals(key)) {
                 //do nothing
             } else if (FIELD_DISPLAY.equals(key)) {
                 valueAsString = value.getAsString();

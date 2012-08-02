@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONException;
@@ -56,28 +58,52 @@ public class Task implements Comparable<Task>, ToJson, Processable {
     }
 
     public String getCreatedRfc3339() {
-        //todo implement with jodaTime package
+        DateTime dt = new DateTime(getCreated(), DateTimeZone.forID("UTC"));
         DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-        return "Not yet implemented";
+        return fmt.print(dt);
     }
 
+    /**
+     * sets the summary for this task
+     *
+     * @param summary the new summary for this task
+     * @return this task, daisy chain style.
+     */
     public Task setSummary(String summary) {
         this.summary = summary;
         return this;
     }
 
+    /**
+     * returns the summary for this task
+     *
+     * @return the summary for this task
+     */
     public String getSummary() {
         return summary;
     }
 
-    public Task setPicUrl(String url){
-        this.setPicUrl(url);
+    /**
+     * set the url for the photo related to this task
+     *
+     * @param url the url for the photo related to this task
+     * @return this task, daisy chain style
+     */
+    public Task setPicUrl(String url) {
+        this.picUrl = url;
         return this;
     }
 
+    /**
+     * returns the url for the photo related to this task
+     *
+     * @return the url related to this photo
+     */
     public String getPicUrl() {
         return picUrl;
     }
+
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(getDone() ? " " : "X").append("] ");
@@ -108,19 +134,19 @@ public class Task implements Comparable<Task>, ToJson, Processable {
                 unsupported = true;
             }
 
-            if(FIELD_SUMMARY.equals(key)){
+            if (FIELD_SUMMARY.equals(key)) {
                 //do nothing, handled by tasklist
-            } else if(FIELD_DONE.equals(key)){
+            } else if (FIELD_DONE.equals(key)) {
                 boolean newDone = value.getAsBoolean();
-                if(this.getDone() != newDone){
+                if (this.getDone() != newDone) {
                     changed = true;
                     this.setDone(newDone);
                 }
-            } else if(FIELD_PIC_URL.equals(key)){
-                if(couldNotParse || unsupported){
+            } else if (FIELD_PIC_URL.equals(key)) {
+                if (couldNotParse || unsupported) {
                     return "problem parsing " + FIELD_PIC_URL + " value for task transaction: " + value;
                 }
-                if(!valueAsString.equals(this.getPicUrl())){
+                if (!valueAsString.equals(this.getPicUrl())) {
                     changed = true;
                     setPicUrl(this.getPicUrl());
                 }
@@ -144,10 +170,7 @@ public class Task implements Comparable<Task>, ToJson, Processable {
         int compare = Long.valueOf(created).compareTo(o.getCreated());
         boolean safeToPersist = isSafeToPersist();
         if (compare != 0 || !safeToPersist) return compare;
-        assert summary != null;
-        compare = summary.compareTo(o.getSummary());
-        if (compare != 0) return compare;
-        compare = Boolean.valueOf(done).compareTo(o.getDone());
+        if (summary == null && o.getSummary() == null) compare = 0;
         return compare;
     }
 
@@ -168,17 +191,39 @@ public class Task implements Comparable<Task>, ToJson, Processable {
         return copy;
     }
 
-    /** {@inheritDoc} */
-    public JSONObject toJson(){
+    /**
+     * {@inheritDoc}
+     */
+    public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         try {
             obj.put(FIELD_SUMMARY, this.getSummary());
             obj.put(FIELD_DONE, this.getDone());
             obj.put(FIELD_CREATED, this.getCreatedRfc3339());
-            if(this.getPicUrl() != null) obj.put(FIELD_PIC_URL, this.getPicUrl());
+            if (this.getPicUrl() != null) obj.put(FIELD_PIC_URL, this.getPicUrl());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    public boolean equalsIgnoreTimestamp(Task otherTask){
+        boolean same = true;
+        if(this.getSummary() == null){
+            same = otherTask.getSummary() == null;
+        }
+        else same = this.getSummary().equals(otherTask.getSummary());
+        if(same){
+            if(getPicUrl() == null){
+                same = otherTask.getPicUrl() == null;
+            }
+            else {
+                same = getPicUrl().equals(otherTask.getPicUrl());
+            }
+        }
+        if(same){
+            same = getDone() == otherTask.getDone();
+        }
+        return same;
     }
 }

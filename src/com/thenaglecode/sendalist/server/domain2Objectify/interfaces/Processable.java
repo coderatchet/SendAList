@@ -15,6 +15,8 @@ import com.google.gson.JsonObject;
  */
 public interface Processable {
     public final static String Nop = "Nop";
+    public final static String FIELD_TYPE = "c";
+    public final static String FIELD_ID = "i";
 
     /**
      * a processable object receives a json object that represents the object that is to be persisted in the database.
