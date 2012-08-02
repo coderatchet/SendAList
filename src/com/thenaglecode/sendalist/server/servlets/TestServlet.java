@@ -91,7 +91,7 @@ public class TestServlet extends HttpServlet {
 
             printHtmlInBody("done", "<h2>created " + value + " fake users</h2>", res);
         } else if ("send".equals(command)) {
-            //todo once send a list is implemented, this will 'send' a given list to a specified friend.
+            //send a list... use transaction servlet instead.
         } else if ("printusers".equals(command)) {
             SendAListDAO dao = new SendAListDAO();
             List<UserAccount> users = dao.getAllUsers();

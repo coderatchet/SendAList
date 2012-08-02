@@ -53,7 +53,7 @@ public class InvitationTests {
             fail();
         }
 
-        System.out.println("\n\nPlacing a new invitation in should get rid of the other invitations...");
+        System.out.println("\n\nPlacing a new invitation in should get rid of the other invitations...adding now.");
         manager.add(new Invitation("him", "her", 3, Invitation.Type.Edit));
         assertEquals(1, manager.getCount());
         assertEquals(1, manager.getMapCount());

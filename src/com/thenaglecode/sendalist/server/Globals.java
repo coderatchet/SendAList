@@ -92,7 +92,10 @@ public class Globals {
      * @return the example task list to be added to a user.
      */
     public static TaskList generateExampleTaskList() {
-        return null; //todo implement
+        TaskList taskList = new TaskList();
+        taskList.setSummary("example list");
+        taskList.addTasks(new Task("try this"),new Task("try that"));
+        return null; //todo finish
     }
 
     /* Fake User Generation */

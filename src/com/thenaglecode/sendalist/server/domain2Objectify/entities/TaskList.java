@@ -126,8 +126,7 @@ public class TaskList implements Processable {
         sb.append("\n'-->Summary: ").append(summary);
         List<Task> tasks = getTasks();
         for (Task task : tasks) {
-            sb.append("\n\t").append(task.getSummary());
-            sb.append(" is ").append((task.getDone()) ? "done" : "not done");
+            sb.append("\n\t").append(task);
         }
         return sb.toString();
     }

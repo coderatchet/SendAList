@@ -1,5 +1,6 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.util;
 
+import com.google.gson.JsonObject;
 import com.thenaglecode.sendalist.server.domain2Objectify.unstoredObjects.Invitation;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +84,6 @@ public class InvitationManager {
     private void cleanupOldInvitations() {
         long now = System.currentTimeMillis();
         List<TimeStampedInvitation> thingsToDelete = new ArrayList<TimeStampedInvitation>();
-        System.out.println("there are " + getCount() + " things in the sortedQueue");
         for (TimeStampedInvitation timeStampedInvitation : sortedQueue) {
             if (now - timeStampedInvitation.getTimestamp() > TTL) {
                 thingsToDelete.add(timeStampedInvitation);
@@ -93,11 +93,9 @@ public class InvitationManager {
         sortedQueue.removeAll(thingsToDelete);
 
         //remove them from the other map.
-        System.out.println("there are " + thingsToDelete.size() + " things that are being deleted in cleanup");
         for (TimeStampedInvitation timeStampedInvitation : thingsToDelete) {
             List<TimeStampedInvitation> invitations = map.get(timeStampedInvitation.getInvitation().getEmailTo());
             invitations.remove(timeStampedInvitation);
-            System.out.println("invitations are empty? " + invitations.isEmpty());
             if (invitations.isEmpty()) {
                 map.remove(timeStampedInvitation.invitation.getEmailTo());
             }
@@ -116,16 +114,36 @@ public class InvitationManager {
     }
 
     public void printState() {
-        System.out.println("map count: " + getMapCount());
         for (String email : map.keySet()) {
             for (TimeStampedInvitation tsi : map.get(email)) {
                 System.out.println("\t" + tsi.invitation.toString());
             }
         }
-        System.out.println("queue count: " + getCount());
         for (TimeStampedInvitation tsi : sortedQueue) {
             System.out.println("\t" + tsi.invitation.toString());
         }
+    }
+
+    public String registerInvitation(JsonObject tx) {
+        //check for all required fields.
+        if(!tx.has(Invitation.FIELD_FROM) || !tx.get(Invitation.FIELD_FROM).isJsonPrimitive() || !tx.get(Invitation.FIELD_FROM).getAsJsonPrimitive().isString()){
+            return "problem reading field \"" + Invitation.FIELD_FROM + "\"";
+        }
+        if(!tx.has(Invitation.FIELD_TO) || !tx.get(Invitation.FIELD_TO).isJsonPrimitive() || !tx.get(Invitation.FIELD_TO).getAsJsonPrimitive().isString()){
+            return "problem reading field \"" + Invitation.FIELD_TO + "\"";
+        }
+        if(!tx.has(Invitation.FIELD_TYPE) || !tx.get(Invitation.FIELD_TYPE).isJsonPrimitive() || !tx.get(Invitation.FIELD_TYPE).getAsJsonPrimitive().isString()){
+            return "problem reading field \"" + Invitation.FIELD_TYPE + "\"";
+        }
+        if(!tx.has(Invitation.FIELD_ID) || !tx.get(Invitation.FIELD_ID).isJsonPrimitive() || !tx.get(Invitation.FIELD_ID).getAsJsonPrimitive().isNumber()){
+            return "problem reading field \"" + Invitation.FIELD_ID + "\"";
+        }
+
+        String from = tx.get(Invitation.FIELD_FROM).getAsString();
+        String to = tx.get(Invitation.FIELD_TO).getAsString();
+        String type = tx.get(Invitation.FIELD_TYPE).getAsString();
+        long id = tx.get(Invitation.FIELD_ID).getAsLong();
+        return null; //todo implement
     }
 
     /**
@@ -138,7 +156,6 @@ public class InvitationManager {
 
         public TimeStampedInvitation(Invitation invitation) {
             timestamp = System.currentTimeMillis();
-            System.out.println("new: " + timestamp);
             this.invitation = invitation;
         }
 

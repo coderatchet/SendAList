@@ -6,6 +6,7 @@ import com.googlecode.objectify.Query;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
+import com.thenaglecode.sendalist.server.domain2Objectify.util.InvitationManager;
 import com.thenaglecode.sendalist.shared.OriginatorOfPersistentChange;
 import com.thenaglecode.sendalist.shared.dto.ErrorSet;
 import org.jetbrains.annotations.NotNull;
@@ -45,8 +46,8 @@ public class RequestProcessor {
         boolean isNew = false;
         Long id = -1l;
 
-        String c = tx.get("c").getAsString(); //this represents the command, usually the object type
-        String i = tx.get("i").getAsString(); //this represents the id or the instruction to create a new object
+        String c = tx.get(Processable.FIELD_TYPE).getAsString(); //this represents the command, usually the object type
+        String i = tx.get(Processable.FIELD_ID).getAsString(); //this represents the id or the instruction to create a new object
         SendAListDAO dao = new SendAListDAO();
         if (c == null) return getError("Could not read the command");
         if (i == null) return getError("Could not read the id");
@@ -135,7 +136,10 @@ public class RequestProcessor {
                     return getNotModified(c, i);
                 }
             } else if (returnedError(err)) return getError(err);
-        } else return getError("did not understand request type");
+        } else if ("INV".equals(err)){
+            err = InvitationManager.getInstance().registerInvitation(tx);
+        }
+        else return getError("did not understand request type");
         return getError("unknown error occured in RequestProcessor");
     }
 

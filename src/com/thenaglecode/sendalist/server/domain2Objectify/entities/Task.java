@@ -103,7 +103,7 @@ public class Task implements Comparable<Task>, ToJson, Processable {
         return picUrl;
     }
 
-
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(getDone() ? " " : "X").append("] ");

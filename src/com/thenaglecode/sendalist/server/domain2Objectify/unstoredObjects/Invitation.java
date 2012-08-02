@@ -7,9 +7,17 @@ import org.jetbrains.annotations.NotNull;
  * User: Jared Nagle
  * Date: 9/07/12
  * Time: 10:05 PM
+ *
+ * An invitation represents a user's request to another user to "see ({@link Type#View}), have a copy
+ * ({@link Type#Copy}) or be able to edit({@link Type#Edit})" the list.
  */
 public class Invitation {
     public static enum Type {View, Edit, Copy}
+
+    public static final String FIELD_FROM = "from";
+    public static final String FIELD_TO = "to";
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_TYPE = "type";
 
     public Invitation(@NotNull String emailFrom, @NotNull String emailTo, long taskListId, @NotNull Type type) {
         this.emailFrom = emailFrom;
@@ -18,9 +26,13 @@ public class Invitation {
         this.type = type;
     }
 
+    /** the user who sent the request */
     private String emailFrom;
+    /** the user the request needs a response from */
     private String emailTo;
+    /** the id that the list concerns */
     private long taskListId;
+    /** the type of request this is. */
     private Type type;
 
     public String getEmailFrom() {
@@ -44,9 +56,9 @@ public class Invitation {
     }
 
     public String toString() {
-        return new StringBuilder().append("from: ").append(emailFrom)
-                .append(" to: ").append(emailTo)
-                .append(" taskListId: ").append(taskListId)
-                .append(" Type:").append(type.toString()).toString();
+        return new StringBuilder().append(FIELD_FROM).append(": ").append(emailFrom)
+                .append(FIELD_TO).append(": ").append(emailTo)
+                .append(FIELD_ID).append(": ").append(taskListId)
+                .append(FIELD_TYPE).append(": ").append(type.toString()).toString();
     }
 }
