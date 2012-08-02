@@ -205,15 +205,30 @@ public class ServletTests {
             }
             if (!contains) fail("expected the list to contain task: " + task.toJson());
         }
-
     }
 
-    private void testRenameList() {
+    private void testRenameList() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        final String expectedSummary = "new summary here";
 
+        requestJson = new JSONObject(getTextFromFile("rename_list.txt"));
+        requestJson.getJSONArray("txs").getJSONObject(0).put("i", listId);
+        transactionWithFile(requestJson);
+
+        SendAListDAO dao = new SendAListDAO();
+        TaskList taskList = dao.findTaskList(listId);
+        assertNotNull(taskList);
+        assertEquals("expected tasklist to have new summary of \"" + expectedSummary + "\"", expectedSummary, taskList.getSummary());
     }
 
-    private void testDeleteList() {
-
+    private void testDeleteList() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("delete_list.txt"));
+        requestJson.getJSONArray("txs").getJSONObject(0).put("i", listId);
+        transactionWithFile(requestJson);
+        SendAListDAO dao = new SendAListDAO();
+        TaskList taskList = dao.findTaskList(listId);
+        assertNull(taskList);
     }
 
     private JSONObject transactionWithFile(JSONObject requestJson) {
