@@ -1,5 +1,6 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.unstoredObjects;
 
+import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
  * An invitation represents a user's request to another user to "see ({@link Type#View}), have a copy
  * ({@link Type#Copy}) or be able to edit({@link Type#Edit})" the list.
  */
-public class Invitation {
+public class Invitation implements ToJson{
     public static enum Type {View, Edit, Copy}
 
     public static final String FIELD_FROM = "from";
