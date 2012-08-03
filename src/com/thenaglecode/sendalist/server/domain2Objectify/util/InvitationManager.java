@@ -124,26 +124,48 @@ public class InvitationManager {
         }
     }
 
-    public String registerInvitation(JsonObject tx) {
+    public static String registerInvitation(JsonObject tx) {
         //check for all required fields.
-        if(!tx.has(Invitation.FIELD_FROM) || !tx.get(Invitation.FIELD_FROM).isJsonPrimitive() || !tx.get(Invitation.FIELD_FROM).getAsJsonPrimitive().isString()){
+        if (!tx.has(Invitation.FIELD_FROM) || !tx.get(Invitation.FIELD_FROM).isJsonPrimitive() || !tx.get(Invitation.FIELD_FROM).getAsJsonPrimitive().isString()) {
             return "problem reading field \"" + Invitation.FIELD_FROM + "\"";
         }
-        if(!tx.has(Invitation.FIELD_TO) || !tx.get(Invitation.FIELD_TO).isJsonPrimitive() || !tx.get(Invitation.FIELD_TO).getAsJsonPrimitive().isString()){
+        if (!tx.has(Invitation.FIELD_TO) || !tx.get(Invitation.FIELD_TO).isJsonPrimitive() || !tx.get(Invitation.FIELD_TO).getAsJsonPrimitive().isString()) {
             return "problem reading field \"" + Invitation.FIELD_TO + "\"";
         }
-        if(!tx.has(Invitation.FIELD_TYPE) || !tx.get(Invitation.FIELD_TYPE).isJsonPrimitive() || !tx.get(Invitation.FIELD_TYPE).getAsJsonPrimitive().isString()){
+        if (!tx.has(Invitation.FIELD_TYPE) || !tx.get(Invitation.FIELD_TYPE).isJsonPrimitive() || !tx.get(Invitation.FIELD_TYPE).getAsJsonPrimitive().isString()
+                || Invitation.Type.valueOf(tx.get(Invitation.FIELD_TYPE).getAsString()) == null) {
             return "problem reading field \"" + Invitation.FIELD_TYPE + "\"";
         }
-        if(!tx.has(Invitation.FIELD_ID) || !tx.get(Invitation.FIELD_ID).isJsonPrimitive() || !tx.get(Invitation.FIELD_ID).getAsJsonPrimitive().isNumber()){
+        if (!tx.has(Invitation.FIELD_ID) || !tx.get(Invitation.FIELD_ID).isJsonPrimitive() || !tx.get(Invitation.FIELD_ID).getAsJsonPrimitive().isNumber()) {
             return "problem reading field \"" + Invitation.FIELD_ID + "\"";
         }
 
         String from = tx.get(Invitation.FIELD_FROM).getAsString();
         String to = tx.get(Invitation.FIELD_TO).getAsString();
-        String type = tx.get(Invitation.FIELD_TYPE).getAsString();
         long id = tx.get(Invitation.FIELD_ID).getAsLong();
-        return null; //todo implement
+        Invitation.Type type;
+        try {
+            type = Invitation.Type.valueOf(tx.get(Invitation.FIELD_TYPE).getAsString());
+        } catch (IllegalArgumentException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("value for field ").append(Invitation.FIELD_TYPE)
+                    .append(" was not a valid field! valid fields include: [");
+            boolean first = true;
+            for (Invitation.Type type : Invitation.Type.values()) {
+                if (first) {
+                    first = false;
+                    sb.append(type.name());
+                } else {
+                    sb.append(',').append(type.name());
+                }
+            }
+            sb.append("]");
+            return sb.toString();
+        }
+
+        Invitation newInvitation = new Invitation(from, to, id, type);
+        getInstance().add(newInvitation);
+        return null;
     }
 
     /**
