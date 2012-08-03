@@ -151,12 +151,12 @@ public class InvitationManager {
             sb.append("value for field ").append(Invitation.FIELD_TYPE)
                     .append(" was not a valid field! valid fields include: [");
             boolean first = true;
-            for (Invitation.Type type : Invitation.Type.values()) {
+            for (Invitation.Type aType : Invitation.Type.values()) {
                 if (first) {
                     first = false;
-                    sb.append(type.name());
+                    sb.append(aType.name());
                 } else {
-                    sb.append(',').append(type.name());
+                    sb.append(',').append(aType.name());
                 }
             }
             sb.append("]");
