@@ -137,6 +137,7 @@ public class RequestProcessor {
                 }
             } else if (returnedError(err)) return getError(err);
         } else if ("INV".equals(err)){
+            //todo check if the user sending this is the one mentioned in "from" field of transaction
             err = InvitationManager.getInstance().registerInvitation(tx);
         }
         else return getError("did not understand request type");
