@@ -35,11 +35,14 @@ public class TaskList implements Processable {
     @Embedded
     private List<Task> tasks = null;
     private Key<UserAccount> owner = null;
+    private long created;
 
     public TaskList() {
+        created = System.currentTimeMillis();
     }
 
     public TaskList(long id) {
+        this();
         this.id = id;
     }
 
@@ -47,16 +50,22 @@ public class TaskList implements Processable {
         return id;
     }
 
-    /** set the summary/title of this task list
+    /**
+     * set the summary/title of this task list
+     *
      * @param summary the new summary for this task list.
-     * @return this TaskList, Daisy chain style*/
+     * @return this TaskList, Daisy chain style
+     */
     public TaskList setSummary(String summary) {
         this.summary = summary;
         return this;
     }
 
-    /** return the summary/title of this task list
-     * @return the summary/title of this task list */
+    /**
+     * return the summary/title of this task list
+     *
+     * @return the summary/title of this task list
+     */
     public String getSummary() {
         return summary;
     }
@@ -166,7 +175,7 @@ public class TaskList implements Processable {
             boolean unsupported = false;
             String valueAsString = null;
             try {
-                if(value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
+                if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
                     valueAsString = value.getAsString();
             } catch (ClassCastException e) {
                 couldNotParse = true;
@@ -208,12 +217,10 @@ public class TaskList implements Processable {
                     boolean newTask = false;
                     if (!taskObject.has(Task.FIELD_SUMMARY)) {
                         return "task did not have the required " + FIELD_SUMMARY + " field: " + taskObject.toString();
-                    }
-                    else if(!taskObject.get(FIELD_SUMMARY).isJsonPrimitive() &&
-                            !taskObject.get(FIELD_SUMMARY).getAsJsonPrimitive().isString()){
+                    } else if (!taskObject.get(FIELD_SUMMARY).isJsonPrimitive() &&
+                            !taskObject.get(FIELD_SUMMARY).getAsJsonPrimitive().isString()) {
                         return FIELD_SUMMARY + " value is not a string: " + taskObject.toString();
-                    }
-                    else {
+                    } else {
                         //parse summary
                         String summary = taskObject.get(FIELD_SUMMARY).getAsString();
                         for (Task task : existingTasks) {
@@ -228,13 +235,12 @@ public class TaskList implements Processable {
                         }
                     }
                     String err = modTask.processTransaction(taskObject);
-                    if(RequestProcessor.returnedError(err)){
+                    if (RequestProcessor.returnedError(err)) {
                         return err;
-                    }
-                    else {
-                        if(!modTask.isSafeToPersist()) return "the task was missing some required fields: "
-                            + taskObject.toString();
-                        if(err == null || newTask){
+                    } else {
+                        if (!modTask.isSafeToPersist()) return "the task was missing some required fields: "
+                                + taskObject.toString();
+                        if (err == null || newTask) {
                             getTasks().add(modTask);
                         }
                     }
@@ -309,7 +315,20 @@ public class TaskList implements Processable {
     private void processDeleteTransaction() {
         SendAListDAO dao = new SendAListDAO();
         UserAccount owner = dao.findUser(this.getOwner().getName());
-        owner.deleteTaskList(this.generateKey());
+        if (owner != null) {
+            owner.deleteTaskList(this.generateKey());
+        }
+    }
+
+    public TaskList duplicate(boolean withNewCreationTime) {
+        TaskList duplicateTaskList = new TaskList();
+        if (!withNewCreationTime) duplicateTaskList.setCreated(getCreated());
+        duplicateTaskList.setSummary(getSummary());
+        List<Task> tasks = getTasks();
+        for (Task task : tasks) {
+            duplicateTaskList.addTask(task.duplicate(withNewCreationTime));
+        }
+        return duplicateTaskList;
     }
 
     /**
@@ -331,9 +350,9 @@ public class TaskList implements Processable {
             obj.put(FIELD_ID, String.valueOf(this.getId()));
             if (getSummary() != null) obj.put(FIELD_SUMMARY, this.getSummary());
             if (getOwner() != null) obj.put(FIELD_OWNER, this.getOwner().getName());
-            if (getTasks().size() > 0){
+            if (getTasks().size() > 0) {
                 JSONArray taskArray = new JSONArray();
-                for (Task task : getTasks()){
+                for (Task task : getTasks()) {
                     taskArray.put(task.toJson());
                 }
                 obj.put(FIELD_TASKS, taskArray);
@@ -344,5 +363,13 @@ public class TaskList implements Processable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
     }
 }

@@ -1,8 +1,13 @@
 package com.thenaglecode.sendalist.server.domain2Objectify.util;
 
 import com.google.gson.JsonObject;
+import com.googlecode.objectify.Key;
+import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
+import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.unstoredObjects.Invitation;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -13,17 +18,17 @@ import java.util.*;
  * Time: 10:02 PM
  * <p/>
  * singleton class that stores the invitations.
- *
+ * <p/>
  * <p>
- *     Each invitation is one of three types: View, Copy or Edit. if an invitation exists for a particular user for a
- *     particular item list, then it's status can be refreshed or overwritten if another invitation is made for that
- *     person. Edit can overwrite View invitations (since a user can also view a list they are able to edit) and copy
- *     invitations are new invitations all together.
+ * Each invitation is one of three types: View, Copy or Edit. if an invitation exists for a particular user for a
+ * particular item list, then it's status can be refreshed or overwritten if another invitation is made for that
+ * person. Edit can overwrite View invitations (since a user can also view a list they are able to edit) and copy
+ * invitations are new invitations all together.
  * </p>
- *
+ * <p/>
  * <p>
- *     A note about copy invitations is that sending the invitation out to a person to receive a copy will also create
- *     the list in preempt in order to increase the efficiency of acceptances.
+ * A note about copy invitations is that sending the invitation out to a person to receive a copy will also create
+ * the list in preempt in order to increase the efficiency of acceptances.
  * </p>
  *
  * @see Invitation
@@ -35,6 +40,7 @@ public class InvitationManager {
     private static boolean developerMode = false;
     Map<String, List<TimeStampedInvitation>> map = new HashMap<String, List<TimeStampedInvitation>>();
     private Set<TimeStampedInvitation> sortedQueue = new TreeSet<TimeStampedInvitation>();
+    private Map<Long, JSONObject> copies = new HashMap<Long, JSONObject>();
 
     public static InvitationManager getInstance() {
         if (instance == null) {
@@ -58,7 +64,7 @@ public class InvitationManager {
 
     /**
      * @return how many invitations are in the system
-     * */
+     */
     public int getCount() {
         return sortedQueue.size();
     }
@@ -72,36 +78,79 @@ public class InvitationManager {
 
     /**
      * this functions adds the invitation to the map of invitations.
+     *
      * @param invitation the invitation to place in the map
+     * @return an error message if there is one.
      */
-    public synchronized void add(@NotNull Invitation invitation) {
+    public synchronized String add(@NotNull Invitation invitation) {
         cleanupOldInvitations();
         String emailTo = invitation.getEmailTo();
         TimeStampedInvitation timeStampedInvitation = null;
+        long originalTaskListId = invitation.getTaskListId();
+
+        //check if a copy
+        if (Invitation.Type.Copy.equals(invitation.getType())) {
+            // does Does a copy of this list already exist for the to user?
+            // (search the id for a name and id pair that match the to field)
+            JSONObject json = copies.get(invitation.getTaskListId());
+            try {
+                if (json == null || json.get(emailTo) == null) {
+                    //copy the list
+                    SendAListDAO dao = new SendAListDAO();
+                    TaskList originalList = dao.findTaskList(invitation.getTaskListId());
+                    if (originalList == null) return "could not find corresponding list in database with id of ["
+                            + invitation.getTaskListId() + "]";
+                    TaskList duplicateTaskList = originalList.duplicate(true);
+                    //store it in the database
+                    Key<TaskList> key = dao.saveTaskList(duplicateTaskList);
+                    if (key == null) return "there was a problem storing the duplicate task list in the database";
+                    //add it to the copies
+                    putIdInCopies(originalList.getId(), emailTo, key.getId());
+                    invitation.setTaskListId(key.getId());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //register the invitation
         List<TimeStampedInvitation> existingInvitations = map.get(emailTo);
         if (existingInvitations == null) {
+            //just add it
             existingInvitations = new ArrayList<TimeStampedInvitation>();
             timeStampedInvitation = new TimeStampedInvitation(invitation);
+            timeStampedInvitation.setOriginalTaskListId(originalTaskListId);
             existingInvitations.add(timeStampedInvitation);
             map.put(emailTo, existingInvitations);
             sortedQueue.add(timeStampedInvitation);
         } else {
+            boolean isUpgrade = false;
             for (TimeStampedInvitation wrapper : existingInvitations) {
                 if (wrapper.invitation.equals(invitation)) {
                     timeStampedInvitation = wrapper;
                     break;
+                } else if (wrapper.invitation.equalsNotIncludingType(invitation)
+                        && wrapper.invitation.getType() == Invitation.Type.View
+                        && invitation.getType().equals(Invitation.Type.Edit)) {
+                    //if they are equal
+                    isUpgrade = true;
+                    timeStampedInvitation = wrapper;
                 }
             }
-            if (timeStampedInvitation == null) { //if not found then add it
+            if (timeStampedInvitation == null && !isUpgrade) { //if not found then add it
                 timeStampedInvitation = new TimeStampedInvitation(invitation);
                 existingInvitations.add(timeStampedInvitation);
                 sortedQueue.add(timeStampedInvitation);
             } else { //if it is found, then reset it's time.
                 sortedQueue.remove(timeStampedInvitation);
                 timeStampedInvitation.resetTimestamp();
+                if (isUpgrade) {
+                    timeStampedInvitation.invitation.upgradeToEdit();
+                }
                 sortedQueue.add(timeStampedInvitation);
             }
         }
+        return null;
     }
 
     /**
@@ -118,8 +167,23 @@ public class InvitationManager {
 
         sortedQueue.removeAll(thingsToDelete);
 
-        //remove them from the other map.
+        //remove them from the other maps.
         for (TimeStampedInvitation timeStampedInvitation : thingsToDelete) {
+            if (Invitation.Type.Copy.equals(timeStampedInvitation.invitation.getType())) {
+                //remove from the copies map.
+                JSONObject json = copies.get(timeStampedInvitation.originalTaskListId);
+                if (json != null) {
+                    //get the id of the list it created
+                    long idToDelete = (Long) json.remove(timeStampedInvitation.invitation.getEmailTo());
+                    SendAListDAO dao = new SendAListDAO();
+                    TaskList found = dao.findTaskList(idToDelete);
+                    // the object should never have an owner if it is still in this list, but regardless,
+                    // we should check anyway lest we delete someones list.
+                    if(found != null && found.getOwner() != null) dao.deleteTaskList(idToDelete);
+                    if (json.length() == 0) copies.remove(timeStampedInvitation.originalTaskListId);
+                    else copies.put(timeStampedInvitation.originalTaskListId, json);
+                }
+            }
             List<TimeStampedInvitation> invitations = map.get(timeStampedInvitation.getInvitation().getEmailTo());
             invitations.remove(timeStampedInvitation);
             if (invitations.isEmpty()) {
@@ -197,12 +261,45 @@ public class InvitationManager {
         return null;
     }
 
+    /* copy operations */
+
+    /**
+     * this function adds the key value pair of
+     *
+     * @param id      the id of the list that was copied
+     * @param toEmail the email of the user this
+     * @param copyId  the id of the newly duplicated list
+     */
+    private void putIdInCopies(long id, @NotNull String toEmail, long copyId) {
+        JSONObject obj = copies.get(id);
+
+        if (obj == null) {
+            obj = new JSONObject();
+            try {
+                obj.put(toEmail, copyId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            copies.put(id, obj);
+        }
+
+        try {
+            if (!obj.has(toEmail)) {
+                obj.put(toEmail, copyId);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * this object enables a timestamp to be associated with the object.
      */
     private static class TimeStampedInvitation implements Comparable<TimeStampedInvitation> {
         private long timestamp;
+        public long originalTaskListId = -1;
 
+        @NotNull
         public Invitation invitation;
 
         public TimeStampedInvitation(Invitation invitation) {
@@ -218,8 +315,13 @@ public class InvitationManager {
             return timestamp;
         }
 
+        @NotNull
         public Invitation getInvitation() {
             return invitation;
+        }
+
+        public void setOriginalTaskListId(long originalTaskListId) {
+            this.originalTaskListId = originalTaskListId;
         }
 
         @Override

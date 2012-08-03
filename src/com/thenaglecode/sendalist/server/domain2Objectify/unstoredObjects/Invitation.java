@@ -15,6 +15,10 @@ import org.json.JSONObject;
  * ({@link Type#Copy}) or be able to edit({@link Type#Edit})" the list.
  */
 public class Invitation implements ToJson{
+    public void upgradeToEdit() {
+        this.type = Type.Edit;
+    }
+
     public static enum Type {View, Edit, Copy}
 
     public static final String FIELD_FROM = "from";
@@ -57,13 +61,19 @@ public class Invitation implements ToJson{
     public long getTaskListId() {
         return taskListId;
     }
+    
+    public void setTaskListId(long taskListId){
+        this.taskListId = taskListId;
+    }
 
     public Type getType() {
         return type;
     }
 
-    public boolean equalsNotIncludingFromAndType(Invitation invitation) {
-        return emailTo.equals(invitation.emailTo) && taskListId == invitation.taskListId;
+    public boolean equalsNotIncludingType(Invitation invitation) {
+        return  emailFrom.equals(invitation.emailFrom)
+                && emailTo.equals(invitation.emailTo)
+                && taskListId == invitation.taskListId;
     }
 
     public String toString() {
