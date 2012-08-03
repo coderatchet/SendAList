@@ -12,7 +12,21 @@ import java.util.*;
  * Date: 9/07/12
  * Time: 10:02 PM
  * <p/>
- * singleton class that stores the invitations
+ * singleton class that stores the invitations.
+ *
+ * <p>
+ *     Each invitation is one of three types: View, Copy or Edit. if an invitation exists for a particular user for a
+ *     particular item list, then it's status can be refreshed or overwritten if another invitation is made for that
+ *     person. Edit can overwrite View invitations (since a user can also view a list they are able to edit) and copy
+ *     invitations are new invitations all together.
+ * </p>
+ *
+ * <p>
+ *     A note about copy invitations is that sending the invitation out to a person to receive a copy will also create
+ *     the list in preempt in order to increase the efficiency of acceptances.
+ * </p>
+ *
+ * @see Invitation
  */
 public class InvitationManager {
     private long TTL = 1000 * 60 * 60 * 24 * 30; //30 days
@@ -33,19 +47,31 @@ public class InvitationManager {
         this.TTL = ttl;
     }
 
+    /**
+     * sets whether developer output should be shown or not
+     *
+     * @param developerMode whether the output should be shown for development purposes or not
+     */
     public static void setDeveloperMode(boolean developerMode) {
         InvitationManager.developerMode = developerMode;
     }
 
+    /**
+     * @return how many invitations are in the system
+     * */
     public int getCount() {
         return sortedQueue.size();
     }
 
+    /**
+     *
+     * */
     public int getMapCount() {
         return map.size();
     }
 
     /**
+     * this functions adds the invitation to the map of invitations.
      * @param invitation the invitation to place in the map
      */
     public synchronized void add(@NotNull Invitation invitation) {
@@ -113,6 +139,9 @@ public class InvitationManager {
         return invitations;
     }
 
+    /**
+     * prints the current state of the map
+     */
     public void printState() {
         for (String email : map.keySet()) {
             for (TimeStampedInvitation tsi : map.get(email)) {
