@@ -89,7 +89,7 @@ public class InvitationManager {
         long originalTaskListId = invitation.getTaskListId();
 
         //check if a copy
-        if (Invitation.Type.Copy.equals(invitation.getType())) {
+        if (Invitation.Type.copy.equals(invitation.getType())) {
             // does Does a copy of this list already exist for the to user?
             // (search the id for a name and id pair that match the to field)
             JSONObject json = copies.get(invitation.getTaskListId());
@@ -130,8 +130,8 @@ public class InvitationManager {
                     timeStampedInvitation = wrapper;
                     break;
                 } else if (wrapper.invitation.equalsNotIncludingType(invitation)
-                        && wrapper.invitation.getType() == Invitation.Type.View
-                        && invitation.getType().equals(Invitation.Type.Edit)) {
+                        && wrapper.invitation.getType() == Invitation.Type.view
+                        && invitation.getType().equals(Invitation.Type.edit)) {
                     //if they are equal
                     isUpgrade = true;
                     timeStampedInvitation = wrapper;
@@ -169,7 +169,7 @@ public class InvitationManager {
 
         //remove them from the other maps.
         for (TimeStampedInvitation timeStampedInvitation : thingsToDelete) {
-            if (Invitation.Type.Copy.equals(timeStampedInvitation.invitation.getType())) {
+            if (Invitation.Type.copy.equals(timeStampedInvitation.invitation.getType())) {
                 //remove from the copies map.
                 JSONObject json = copies.get(timeStampedInvitation.originalTaskListId);
                 if (json != null) {

@@ -13,6 +13,7 @@ import com.thenaglecode.sendalist.server.domain2Objectify.entities.Task;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
+import com.thenaglecode.sendalist.server.domain2Objectify.util.InvitationManager;
 import com.thenaglecode.sendalist.server.servlets.TransactionServlet;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +78,7 @@ public class ServletTests {
             testDeleteTask();
             testRenameList();
             testDeleteList();
+            testInvitationSending();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -229,6 +231,14 @@ public class ServletTests {
         SendAListDAO dao = new SendAListDAO();
         TaskList taskList = dao.findTaskList(listId);
         assertNull(taskList);
+    }
+
+    private void testInvitationSending() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("send_a_list.txt"));
+        requestJson.getJSONArray("txs").getJSONObject(1).put("id", listId); //replace the id with the real id
+        transactionWithFile(requestJson);
+        InvitationManager.getInstance().printState();
     }
 
     private JSONObject transactionWithFile(JSONObject requestJson) {

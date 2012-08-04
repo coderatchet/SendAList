@@ -24,8 +24,8 @@ public class InvitationTests {
         InvitationManager manager = InvitationManager.getInstance();
         System.out.println("Setting time to live to 2 seconds");
         manager.setTTL(1000); // 1 sec time to live.
-        Invitation one = new Invitation("me", "you", 1, Invitation.Type.View);
-        Invitation two = new Invitation("you", "me", 2, Invitation.Type.Copy);
+        Invitation one = new Invitation("me", "you", 1, Invitation.Type.view);
+        Invitation two = new Invitation("you", "me", 2, Invitation.Type.copy);
         manager.add(one);
         manager.printState();
         manager.add(two);
@@ -54,7 +54,7 @@ public class InvitationTests {
         }
 
         System.out.println("\n\nPlacing a new invitation in should get rid of the other invitations...adding now.");
-        manager.add(new Invitation("him", "her", 3, Invitation.Type.Edit));
+        manager.add(new Invitation("him", "her", 3, Invitation.Type.edit));
         assertEquals(1, manager.getCount());
         assertEquals(1, manager.getMapCount());
         invitations = manager.getInvitations("me");

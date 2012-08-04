@@ -11,15 +11,15 @@ import org.json.JSONObject;
  * Date: 9/07/12
  * Time: 10:05 PM
  * <p/>
- * An invitation represents a user's request to another user to "see ({@link Type#View}), have a copy
- * ({@link Type#Copy}) or be able to edit({@link Type#Edit})" the list.
+ * An invitation represents a user's request to another user to "see ({@link Type#view}), have a copy
+ * ({@link Type#copy}) or be able to edit({@link Type#edit})" the list.
  */
 public class Invitation implements ToJson{
     public void upgradeToEdit() {
-        this.type = Type.Edit;
+        this.type = Type.edit;
     }
 
-    public static enum Type {View, Edit, Copy}
+    public static enum Type {view, edit, copy}
 
     public static final String FIELD_FROM = "from";
     public static final String FIELD_TO = "to";

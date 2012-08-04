@@ -47,11 +47,13 @@ public class RequestProcessor {
         Long id = -1l;
 
         String c = tx.get(Processable.FIELD_TYPE).getAsString(); //this represents the command, usually the object type
-        String i = tx.get(Processable.FIELD_ID).getAsString(); //this represents the id or the instruction to create a new object
+        String i = null; //this represents the id or the instruction to create a new object
+        if (!c.equals("INV"))
+            i = tx.get(Processable.FIELD_ID).getAsString();
         SendAListDAO dao = new SendAListDAO();
         if (c == null) return getError("Could not read the command");
-        if (i == null) return getError("Could not read the id");
-        if (i.equals("new")) isNew = true;
+        if (!c.equals("INV") && i == null) return getError("Could not read the id");
+        if (!c.equals("INV") && i.equals("new")) isNew = true;
 
         String err = null;
         if ("LIST".equals(c)) {
@@ -74,7 +76,7 @@ public class RequestProcessor {
                     Query<TaskList> q = dao.ofy().query(TaskList.class);
                     q.filter("summary", tx.get("summary").getAsString());
                     Iterator itr = q.iterator();
-                    if (itr.hasNext())                 {
+                    if (itr.hasNext()) {
                         return getError("task list already exists! could not create new list named: "
                                 + tx.get("summary").getAsString());
                     }
@@ -136,11 +138,16 @@ public class RequestProcessor {
                     return getNotModified(c, i);
                 }
             } else if (returnedError(err)) return getError(err);
-        } else if ("INV".equals(err)){
+        } else if ("INV".equals(err)) {
             //todo check if the user sending this is the one mentioned in "from" field of transaction
             err = InvitationManager.getInstance().registerInvitation(tx);
-        }
-        else return getError("did not understand request type");
+            if (!returnedError(err)) {
+                if (!Processable.Nop.equals(err)) {
+                    return getInvitationSuccess();
+                }
+                //todo cleanup
+            }
+        } else return getError("did not understand request type");
         return getError("unknown error occured in RequestProcessor");
     }
 
@@ -153,6 +160,10 @@ public class RequestProcessor {
      */
     public static boolean returnedError(String err) {
         return err != null && !Processable.Nop.equals(err);
+    }
+
+    private JSONObject getInvitationSuccess() {
+        return new ErrorSet(200, "success", "goodo");
     }
 
     private JSONObject getDeleteSuccess(@NotNull String type, @NotNull String id) {
