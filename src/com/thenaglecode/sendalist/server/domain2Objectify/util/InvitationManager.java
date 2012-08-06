@@ -2,6 +2,7 @@ package com.thenaglecode.sendalist.server.domain2Objectify.util;
 
 import com.google.gson.JsonObject;
 import com.googlecode.objectify.Key;
+import com.thenaglecode.sendalist.server.Globals;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.unstoredObjects.Invitation;
@@ -34,12 +35,19 @@ import java.util.*;
  * @see Invitation
  */
 public class InvitationManager {
-    private long TTL = 1000 * 60 * 60 * 24 * 30; //30 days
+    private long TTL = 1000l * 60l * 60l * 24l * 30l; //30 days
 
     private static InvitationManager instance;
     private static boolean developerMode = false;
+    private int count = 0;
     Map<String, List<TimeStampedInvitation>> map = new HashMap<String, List<TimeStampedInvitation>>();
     private Set<TimeStampedInvitation> sortedQueue = new TreeSet<TimeStampedInvitation>();
+    /** information in this map reads like this: <br/>
+     * there is a copy of the task list with id [key] available for all of the emails [json object keys] with a new id of
+     * [value associated with json key] <br/><br/>
+     * <b>for example:</b> <br/>
+     * 3 --> {"max@sendalist.com":7,"george@sendalist.com":9} means that there is a copy of the task list with id 3
+     * stored in the database for users max and george with an id of 7 and 9 respectively*/
     private Map<Long, JSONObject> copies = new HashMap<Long, JSONObject>();
 
     public static InvitationManager getInstance() {
@@ -125,19 +133,16 @@ public class InvitationManager {
             sortedQueue.add(timeStampedInvitation);
         } else {
             boolean isUpgrade = false;
+            boolean isDowngrade = false;
             for (TimeStampedInvitation wrapper : existingInvitations) {
-                if (wrapper.invitation.equals(invitation)) {
+                if (wouldReplaceOrUpdate(wrapper.getInvitation(), invitation)) {
+                    //we have found an invitation with the same to and list id.
                     timeStampedInvitation = wrapper;
-                    break;
-                } else if (wrapper.invitation.equalsNotIncludingType(invitation)
-                        && wrapper.invitation.getType() == Invitation.Type.view
-                        && invitation.getType().equals(Invitation.Type.edit)) {
-                    //if they are equal
-                    isUpgrade = true;
-                    timeStampedInvitation = wrapper;
+                    isUpgrade = isUpgrade(wrapper.getInvitation(), invitation);
+                    if(!isUpgrade) isDowngrade = isDowngrade(wrapper.getInvitation(), invitation);
                 }
             }
-            if (timeStampedInvitation == null && !isUpgrade) { //if not found then add it
+            if (timeStampedInvitation == null) { //if not found then add it
                 timeStampedInvitation = new TimeStampedInvitation(invitation);
                 existingInvitations.add(timeStampedInvitation);
                 sortedQueue.add(timeStampedInvitation);
@@ -146,6 +151,8 @@ public class InvitationManager {
                 timeStampedInvitation.resetTimestamp();
                 if (isUpgrade) {
                     timeStampedInvitation.invitation.upgradeToEdit();
+                } else if (isDowngrade) {
+                    timeStampedInvitation.invitation.downgradeToView();
                 }
                 sortedQueue.add(timeStampedInvitation);
             }
@@ -179,7 +186,7 @@ public class InvitationManager {
                     TaskList found = dao.findTaskList(idToDelete);
                     // the object should never have an owner if it is still in this list, but regardless,
                     // we should check anyway lest we delete someones list.
-                    if(found != null && found.getOwner() != null) dao.deleteTaskList(idToDelete);
+                    if (found != null && found.getOwner() != null) dao.deleteTaskList(idToDelete);
                     if (json.length() == 0) copies.remove(timeStampedInvitation.originalTaskListId);
                     else copies.put(timeStampedInvitation.originalTaskListId, json);
                 }
@@ -209,11 +216,8 @@ public class InvitationManager {
     public void printState() {
         for (String email : map.keySet()) {
             for (TimeStampedInvitation tsi : map.get(email)) {
-                System.out.println("\t" + tsi.invitation.toString());
+                System.out.print('\n' + tsi.toString());
             }
-        }
-        for (TimeStampedInvitation tsi : sortedQueue) {
-            System.out.println("\t" + tsi.invitation.toString());
         }
     }
 
@@ -292,6 +296,36 @@ public class InvitationManager {
         }
     }
 
+    private boolean wouldReplaceOrUpdate(Invitation oldInvitation, Invitation newInvitation){
+        boolean forSameUserAndList = oldInvitation.getEmailTo().equals(newInvitation.getEmailTo())
+                && oldInvitation.getTaskListId() == newInvitation.getTaskListId();
+        if(forSameUserAndList) {
+            Invitation.Type oldType, newType;
+            oldType = oldInvitation.getType();
+            newType = newInvitation.getType();
+            if(Invitation.Type.view.equals(oldType) || Invitation.Type.edit.equals(oldType)
+            && Invitation.Type.view.equals(newType) || Invitation.Type.edit.equals(newType)){
+                return true;
+            }
+            else if(Invitation.Type.copy.equals(oldType) && Invitation.Type.copy.equals(newType)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isUpgrade(Invitation oldInvitation, Invitation newInvitation){
+        return wouldReplaceOrUpdate(oldInvitation, newInvitation)
+                && Invitation.Type.view.equals(oldInvitation.getType())
+                && Invitation.Type.edit.equals(newInvitation.getType());
+    }
+
+    private boolean isDowngrade(Invitation oldInvitation, Invitation newInvitation){
+        return wouldReplaceOrUpdate(oldInvitation, newInvitation)
+                && Invitation.Type.edit.equals(oldInvitation.getType())
+                && Invitation.Type.view.equals(newInvitation.getType());
+    }
+
     /**
      * this object enables a timestamp to be associated with the object.
      */
@@ -328,6 +362,15 @@ public class InvitationManager {
         public int compareTo(TimeStampedInvitation o) {
             if (timestamp < o.timestamp) return -1;
             else return 1;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("originalListId: ").append(originalTaskListId);
+            sb.append(" timeStamp: ").append(Globals.getDateTimeStringFromLong(timestamp));
+            sb.append("\n").append(invitation.toString());
+            return sb.toString();
         }
     }
 }

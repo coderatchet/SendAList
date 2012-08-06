@@ -2,13 +2,10 @@ package com.thenaglecode.sendalist.server.domain2Objectify.entities;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.thenaglecode.sendalist.server.Globals;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,9 +55,7 @@ public class Task implements Comparable<Task>, ToJson, Processable {
     }
 
     public String getCreatedRfc3339() {
-        DateTime dt = new DateTime(getCreated(), DateTimeZone.forID("UTC"));
-        DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-        return fmt.print(dt);
+        return Globals.getDateTimeStringFromLong(getCreated());
     }
 
     /**

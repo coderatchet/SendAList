@@ -7,6 +7,10 @@ import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import javax.validation.constraints.Size;
 import java.security.NoSuchAlgorithmException;
@@ -181,5 +185,11 @@ public class Globals {
                 + NOUNS[gen.nextInt(NOUNS.length)] + ((amount > 1) ? "s" : ""));
         fakeTask.setDone(gen.nextBoolean());
         return fakeTask;
+    }
+
+    public static String getDateTimeStringFromLong(long utc){
+        DateTime dt = new DateTime(utc, DateTimeZone.forID("UTC"));
+        DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+        return fmt.print(dt);
     }
 }

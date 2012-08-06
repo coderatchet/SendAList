@@ -19,6 +19,10 @@ public class Invitation implements ToJson{
         this.type = Type.edit;
     }
 
+    public void downgradeToView() {
+        this.type = Type.view;
+    }
+
     public static enum Type {view, edit, copy}
 
     public static final String FIELD_FROM = "from";
@@ -77,10 +81,10 @@ public class Invitation implements ToJson{
     }
 
     public String toString() {
-        return new StringBuilder().append(FIELD_FROM).append(": ").append(emailFrom)
-                .append(FIELD_TO).append(": ").append(emailTo)
-                .append(FIELD_ID).append(": ").append(taskListId)
-                .append(FIELD_TYPE).append(": ").append(type.toString()).toString();
+        return new StringBuilder().append(FIELD_FROM).append(": \"").append(emailFrom).append("\" ")
+                .append(FIELD_TO).append(": \"").append(emailTo).append("\" ")
+                .append(FIELD_ID).append(": ").append(taskListId).append(' ')
+                .append(FIELD_TYPE).append(": \"").append(type.toString()).append("\" ").toString();
     }
 
     public JSONObject toJson() {

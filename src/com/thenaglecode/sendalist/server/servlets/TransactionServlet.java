@@ -48,6 +48,7 @@ import static com.thenaglecode.sendalist.shared.dto.ErrorSet.UNKNOWN_FORMAT_ERRO
 public class TransactionServlet extends HttpServlet {
 
     public static final String PRETTY_JSON_HEADER = "Json-Response-Format";
+    public static final String FIELD_RESPONSES = "responses";
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) {

@@ -1,0 +1,18 @@
+{
+    "txs": [
+        {
+            "c":"INV",
+            "from":"jared@sendalist.com",
+            "to":"max@sendalist.com",
+            "id":1,
+            "type":"copy"
+        },
+        {
+            "c":"INV",
+            "from":"jared@sendalist.com",
+            "to":"max@sendalist.com",
+            "id":1,
+            "type":"view"
+        }
+    ]
+}

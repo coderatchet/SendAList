@@ -138,7 +138,7 @@ public class RequestProcessor {
                     return getNotModified(c, i);
                 }
             } else if (returnedError(err)) return getError(err);
-        } else if ("INV".equals(err)) {
+        } else if ("INV".equals(c)) {
             //todo check if the user sending this is the one mentioned in "from" field of transaction
             err = InvitationManager.getInstance().registerInvitation(tx);
             if (!returnedError(err)) {
