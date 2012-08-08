@@ -28,6 +28,7 @@ public class TaskList implements Processable {
     public static final String FIELD_OWNER = "owner"; //read-only
     public static final String FIELD_DEL_TASK = "deltask"; //used to delete a task
     public static final String FIELD_RENAME_TASK = "renametask"; //used to rename a task
+    public static final String FIELD_COUNT = "num";
 
     @Id
     public Long id;

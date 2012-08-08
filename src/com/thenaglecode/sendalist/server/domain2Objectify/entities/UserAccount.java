@@ -10,6 +10,8 @@ import com.thenaglecode.sendalist.server.Globals;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.ToJson;
+import com.thenaglecode.sendalist.server.domain2Objectify.unstoredObjects.Invitation;
+import com.thenaglecode.sendalist.server.domain2Objectify.util.InvitationManager;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +38,9 @@ public class UserAccount implements Account, ToJson, Processable {
     public static final String FIELD_PASS = "pass"; //not displayed //writable
     public static final String FIELD_DISPLAY = "display"; //writable
     public static final String FIELD_PIC_URL = "picurl"; //writable
+    private static final String FIELD_LIST_SHORT = "lists_meta";
+    private static final String FIELD_INVITATIONS = "requests";
+
     public static final String FIELD_FED = "isfed"; //read-only
 
     static {
@@ -45,10 +50,8 @@ public class UserAccount implements Account, ToJson, Processable {
         testUser.setDisplayName("test");
         testUser.setPhotoUrl("/test");
     }
-
     @Id
     String email;
-
     @Unindexed(IfFalse.class)
     boolean isAdmin;
     String firstName;
@@ -519,6 +522,25 @@ public class UserAccount implements Account, ToJson, Processable {
         if (encryptedPassword == null) return plainTextPass == null;
         else
             return plainTextPass != null && passwordEncryptor.checkPassword(getPS() + plainTextPass, encryptedPassword);
+    }
+
+    /**
+     * this fn returns the information needed by the home page of the application. it includes the summaries and
+     * id's of the lists available, as well as the list of invitations the user currently has.
+     */
+    public JSONObject getHomePageStartUpData() throws JSONException {
+        JSONObject data = new JSONObject();
+        for(TaskList list : getTaskListsFromDatabase()){
+            JSONObject obj = new JSONObject();
+            obj.put(TaskList.FIELD_ID, list.getId());
+            obj.put(TaskList.FIELD_SUMMARY, list.getSummary());
+            obj.put(TaskList.FIELD_COUNT, list.getTasks().size());
+            data.append(FIELD_LIST_SHORT, obj);
+        }
+        for(Invitation inv : InvitationManager.getInstance().getInvitations(getEmail())){
+            data.append(FIELD_INVITATIONS, inv.toJson());
+        }
+        return data;
     }
 
 }
