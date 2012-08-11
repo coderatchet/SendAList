@@ -6,6 +6,8 @@
     </CLASSES>
     <JAVADOC>
       <root url="http://httpunit.sourceforge.net/doc/api" />
+      <root url="file:///usr/share/java/tomcat-7.0-doc" />
+      <root url="file:///usr/share/java/httpunit-1.7/doc" />
     </JAVADOC>
     <SOURCES />
   </library>
