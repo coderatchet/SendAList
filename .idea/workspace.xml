@@ -15,16 +15,8 @@
   </component>
   <component name="ChangeListManager">
     <list id="4f108fa0-a926-4a2d-8a0a-b2e8536905e4" name="Default" comment="" />
-    <list default="true" id="aa68c954-2bfc-438e-97a5-e03ec6edc595" name="iss1" comment="*TaskList.processTransaction now correctly detects changes">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/httpunit.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/AppEngine_API.xml" afterPath="$PROJECT_DIR$/.idea/libraries/AppEngine_API.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/AppEngine_ORM.xml" afterPath="$PROJECT_DIR$/.idea/libraries/AppEngine_ORM.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/AppEngine_Test_Suite.xml" afterPath="$PROJECT_DIR$/.idea/libraries/AppEngine_Test_Suite.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/docs.xml" afterPath="$PROJECT_DIR$/.idea/libraries/docs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/gwt_user.xml" afterPath="$PROJECT_DIR$/.idea/libraries/gwt_user.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/junit.xml" afterPath="$PROJECT_DIR$/.idea/libraries/junit.xml" />
+    <list default="true" id="aa68c954-2bfc-438e-97a5-e03ec6edc595" name="iss1" comment="no compile errors">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SendAList.iml" afterPath="$PROJECT_DIR$/SendAList.iml" />
     </list>
     <ignored path="SendAList.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -590,11 +582,11 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="*TaskList.processTransaction now correctly detects changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="no compile errors" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
-    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
-    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
     <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
     <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
@@ -608,6 +600,7 @@
     <MESSAGE value="*some random configuration files." />
     <MESSAGE value="*processTransaction javadoc updated and implemented for TaskList.&#10;*created duplicate method that will make an exact copy of a task or create a duplicate with a new id and created time." />
     <MESSAGE value="*TaskList.processTransaction now correctly detects changes" />
+    <MESSAGE value="no compile errors" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
