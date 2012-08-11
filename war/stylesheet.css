@@ -1,0 +1,12 @@
+
+    .centerTable {
+        margin-top: 10em;
+        margin-left: 10em;
+        margin-right: 10em;
+        min-width: 50em;
+        border-color: #4682b4;
+        border-radius: 0.5em;
+        border-width: thick;
+        border-style: solid;
+        padding: 2em;
+    }

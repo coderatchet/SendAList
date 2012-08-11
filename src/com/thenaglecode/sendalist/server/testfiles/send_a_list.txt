@@ -1,0 +1,12 @@
+{
+    "txs":[
+        {
+            "c":"USER",
+            "i":"max@sendalist.com",
+            "display":"Maxxy",
+            "fname":"Maxwell",
+            "lname":"Smart",
+            "pass":"new,4321"
+        }
+    ]
+}

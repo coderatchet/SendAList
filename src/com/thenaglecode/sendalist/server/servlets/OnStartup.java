@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServlet;
  * Date: 8/07/12
  * Time: 10:51 PM
  */
-public class OnStartup extends HttpServlet{
+public class OnStartup extends HttpServlet {
 
-     public void init() throws ServletException {
-         Globals.init();
-         System.out.println("************************************");
-         System.out.println("------------INIT COMPLETE-----------");
-         System.out.println("************************************");
-     }
+    public void init() throws ServletException {
+        Globals.init();
+        System.out.println("************************************");
+        System.out.println("------------INIT COMPLETE-----------");
+        System.out.println("************************************");
+        super.init();
+    }
 }

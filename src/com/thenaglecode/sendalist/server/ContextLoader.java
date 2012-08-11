@@ -17,7 +17,12 @@ import javax.servlet.ServletContextListener;
  * Time: 4:31 PM
  */
 public class ContextLoader implements ServletContextListener {
+
     public static final String GOOGLE_API_KEY = "AIzaSyCk5yd7Qt3vQGAuXaUpeLdD2yKgx5enmis";
+    public static final String SESSION_USER_KEY = "sal_login_acc";
+    public static final String SESSION_IDP_ASSERT = "sal_idp_assert";
+    public static final String HOME_URL = "/secured/SendAList.jsp";
+    public static final String SIGNUP_URL = "/signup.jsp";
 
     @Override
     public void contextDestroyed(ServletContextEvent evt) {
@@ -31,10 +36,10 @@ public class ContextLoader implements ServletContextListener {
     // Set config parameters.
     private void initEasyRpContext() {
         RpConfig config = new RpConfig.Builder()
-                .sessionUserKey("sal_login_acc")
-                .sessionIdpAssertionKey("sal_idp_assert")
-                .homeUrl("/#home")
-                .signupUrl("/#signup")
+                .sessionUserKey(SESSION_USER_KEY)
+                .sessionIdpAssertionKey(SESSION_IDP_ASSERT)
+                .homeUrl(HOME_URL)
+                .signupUrl(SIGNUP_URL)
                 .build();
 
         AccountService accountService = new AccountServiceImpl();

@@ -13,7 +13,10 @@ import com.thenaglecode.sendalist.server.domain2Objectify.entities.Task;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
+import com.thenaglecode.sendalist.server.domain2Objectify.util.InvitationManager;
+import com.thenaglecode.sendalist.server.servlets.InfoServlet;
 import com.thenaglecode.sendalist.server.servlets.TransactionServlet;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -51,6 +54,7 @@ public class ServletTests {
         helper.setUp();
         runner = new ServletRunner();
         runner.registerServlet("api", TransactionServlet.class.getName());
+        runner.registerServlet("info/*", InfoServlet.class.getName());
         sc = runner.newClient();
         info = new JsonObject();
     }
@@ -76,10 +80,24 @@ public class ServletTests {
             testRenameTask();
             testDeleteTask();
             testRenameList();
+            testInvitationSending();
+            testMultipleViewInvitations();
+            testUpgradeToEdit();
+            testInvitationCopy();
+            testInfoServlet();
             testDeleteList();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void testInfoServlet() throws IOException, SAXException {
+        System.out.println("/****************************/");
+        System.out.println(sc.getResponse("http://www.test.com/info/jared@sendalist.com").getText());
     }
 
     /**  */
@@ -229,6 +247,56 @@ public class ServletTests {
         SendAListDAO dao = new SendAListDAO();
         TaskList taskList = dao.findTaskList(listId);
         assertNull(taskList);
+    }
+
+    private void testInvitationSending() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("send_a_list.txt"));
+        transactionWithFile(requestJson);
+        InvitationManager.getInstance().printState();
+    }
+
+    private void testMultipleViewInvitations() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("inv_view.txt"));
+        requestJson.getJSONArray("txs").getJSONObject(1).put("id", listId);
+        responseJson = transactionWithFile(requestJson);
+        JSONArray responses = responseJson.getJSONArray("responses");
+        int length = responses.length();
+        for(int i=0; i<length; i++){
+            JSONObject obj = (JSONObject) responses.get(i);
+            assertEquals(obj.getInt("code"), 200);
+        }
+
+        InvitationManager.getInstance().printState();
+    }
+
+    private void testUpgradeToEdit() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("inv_edit_upgrade.txt"));
+        responseJson = transactionWithFile(requestJson);
+        JSONArray responses = responseJson.getJSONArray("responses");
+        int length = responses.length();
+        for(int i=0; i<length; i++){
+            JSONObject obj = (JSONObject) responses.get(i);
+            assertEquals(obj.getInt("code"), 200);
+        }
+
+        InvitationManager.getInstance().printState();
+    }
+
+    private void testInvitationCopy() throws JSONException {
+        JSONObject requestJson = null, responseJson = null;
+        requestJson = new JSONObject(getTextFromFile("inv_copy.txt"));
+        responseJson = transactionWithFile(requestJson);
+        JSONArray responses = responseJson.getJSONArray("responses");
+        int length = responses.length();
+        for(int i=0; i<length; i++){
+            JSONObject obj = (JSONObject) responses.get(i);
+            assertEquals(obj.getInt("code"), 200);
+        }
+
+        InvitationManager.getInstance().printState();
     }
 
     private JSONObject transactionWithFile(JSONObject requestJson) {
