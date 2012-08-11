@@ -5,7 +5,7 @@
       <configuration>
         <setting name="compilerMaxHeapSize" value="256" />
         <setting name="gwtScriptOutputStyle" value="DETAILED" />
-        <setting name="gwtSdkUrl" value="file://C:/JavaLibs/gwt-2.4.0" />
+        <setting name="gwtSdkUrl" value="file:///usr/share/java/gwt-2.4.0" />
         <setting name="webFacet" value="Web" />
       </configuration>
     </facet>
@@ -25,7 +25,7 @@
             <file path="$MODULE_DIR$/src" />
           </files-to-enhance>
           <persistence-api>JPA</persistence-api>
-          <sdk-home-path>C:/JavaLibs/appengine-java-sdk-1.7.0</sdk-home-path>
+          <sdk-home-path>/usr/share/java/appengine-java-sdk-1.7.0</sdk-home-path>
           <email>jarednagle@gmail.com</email>
         </configuration>
       </facet>
@@ -41,18 +41,10 @@
     <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="library" exported="" name="gwt-user" level="project" />
     <orderEntry type="library" name="AppEngine ORM" level="project" />
-    <orderEntry type="library" name="AppEngine API" level="project" />
+    <orderEntry type="library" exported="" name="AppEngine API" level="project" />
     <orderEntry type="library" name="AppEngine Test Suite" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/JavaLibs/junit4.8.2/junit-4.8.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="gwt-user" level="project" />
   </component>
 </module>
 
