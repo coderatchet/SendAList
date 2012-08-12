@@ -16,34 +16,10 @@
   <component name="ChangeListManager">
     <list id="4f108fa0-a926-4a2d-8a0a-b2e8536905e4" name="Default" comment="" />
     <list default="true" id="aa68c954-2bfc-438e-97a5-e03ec6edc595" name="iss1" comment="*TaskList.processTransaction now correctly detects changes">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/Jared_Nagle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/InfoServlet.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/inv_copy.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/inv_edit_upgrade.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/inv_view.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/send_a_list.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/war/secured/SendAList.jsp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/war/stylesheet.css" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/tests/InvitationTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/war/secured/temphome.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/AppEngine_Test_Suite.xml" afterPath="$PROJECT_DIR$/.idea/libraries/AppEngine_Test_Suite.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SendAList.iml" afterPath="$PROJECT_DIR$/SendAList.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/ContextLoader.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/ContextLoader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/Globals.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/Globals.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/Task.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/Task.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/UserAccount.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/UserAccount.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/RequestProcessor.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/RequestProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/unstoredObjects/Invitation.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/unstoredObjects/Invitation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/util/InvitationManager.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/util/InvitationManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/OnStartup.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/OnStartup.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/TransactionServlet.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/TransactionServlet.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java" afterPath="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/war/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/war/WEB-INF/web.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/war/gitkit.js" afterPath="$PROJECT_DIR$/war/gitkit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/war/login.jsp" afterPath="$PROJECT_DIR$/war/login.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/war/signup.jsp" afterPath="$PROJECT_DIR$/war/signup.jsp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/war/secured/SendAList.jsp" afterPath="$PROJECT_DIR$/war/secured/SendAList.jsp" />
     </list>
     <ignored path="SendAList.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -102,85 +78,77 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Task.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/Task.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="112" column="46" selection-start="2879" selection-end="2879" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Processable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/Processable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="43" selection-start="576" selection-end="576" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OriginatorOfPersistentChange.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/shared/OriginatorOfPersistentChange.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="47" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServletTests.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="53" selection-start="1175" selection-end="1175" vertical-scroll-proportion="0.66225165">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RequestProcessor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/interfaces/RequestProcessor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="44" selection-start="3124" selection-end="3124" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TaskList.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="49" selection-start="580" selection-end="580" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AccountServiceImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/services/AccountServiceImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="50" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="UserAccount.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/UserAccount.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="325" column="23" selection-start="9856" selection-end="9856" vertical-scroll-proportion="0.0">
+            <state line="375" column="22" selection-start="11717" selection-end="11717" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SendAListDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/SendAListDAO.java">
+      <file leaf-file-name="signup.jsp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/war/signup.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="138" column="41" selection-start="5254" selection-end="5254" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.jsp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/war/login.jsp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="0" selection-start="988" selection-end="988" vertical-scroll-proportion="-15.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SendAList.jsp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/war/secured/SendAList.jsp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="34" column="7" selection-start="1580" selection-end="1580" vertical-scroll-proportion="-9.041667">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LogoutServlet.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/LogoutServlet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="39" selection-start="622" selection-end="622" vertical-scroll-proportion="0.44871795">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServletTests.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="344" column="38" selection-start="13995" selection-end="13995" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="docComment;class#ServletTests#0" expanded="false" />
+                <element signature="method#setUp#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#tearDown#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#init#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testAll#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testInfoServlet#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#createOwner#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testCreateMultipleLists#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testCreateMultipleTasks#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testRenameTask#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testDeleteTask#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testRenameList#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testDeleteList#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testInvitationSending#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testMultipleViewInvitations#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testUpgradeToEdit#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#testInvitationCopy#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#transactionWithFile#0;class#ServletTests#0" expanded="false" />
+                <element signature="docComment;method#doPostWithThisData#0;class#ServletTests#0" expanded="false" />
+                <element signature="method#doPostWithThisData#0;class#ServletTests#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -206,6 +174,8 @@
         <option value="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java" />
         <option value="$PROJECT_DIR$/src/com/thenaglecode/sendalist/shared/OriginatorOfPersistentChange.java" />
         <option value="$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java" />
+        <option value="$PROJECT_DIR$/war/login.jsp" />
+        <option value="$PROJECT_DIR$/war/secured/SendAList.jsp" />
       </list>
     </option>
   </component>
@@ -233,7 +203,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="2" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -248,8 +218,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Favorites" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -279,21 +247,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="war" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="META-INF" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -312,6 +270,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="sendalist" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SendAList" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SendAList" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sendalist" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shared" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -363,236 +343,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="filters" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="unstoredObjects" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interfaces" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SendAList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sendalist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain2Objectify" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entities" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -614,10 +368,39 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
   </component>
-  <component name="RunManager" selected="Tomcat Server.GWT Client Test">
+  <component name="RunManager" selected="Google AppEngine Dev Server.AppEngine Dev">
+    <configuration default="false" name="ServletTests.testAll" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.thenaglecode.sendalist.server.testfiles.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="SendAList" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.thenaglecode.sendalist.server.testfiles" />
+      <option name="MAIN_CLASS_NAME" value="com.thenaglecode.sendalist.server.testfiles.ServletTests" />
+      <option name="METHOD_NAME" value="testAll" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -751,15 +534,52 @@
       <option name="SERVER_ID" value="app-engine:AppEngine Dev" />
       <method />
     </configuration>
-    <configuration default="false" name="AppEngine Dev" type="GoogleAppEngineDevServer" factoryName="Local">
+    <configuration default="false" name="AppEngine Dev" type="GoogleAppEngineDevServer" factoryName="Local" APPLICATION_SERVER_NAME="AppEngine Dev">
       <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080" />
       <server-settings>
         <option name="artifact" value="SendAList:war exploded" />
+        <option name="serverParameters" value="--address=0.0.0.0" />
       </server-settings>
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="55759" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper VM_VAR="" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
       <method />
     </configuration>
-    <configuration default="false" name="GWT Client Test" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local">
+    <configuration default="false" name="GWT Client Test" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 7">
       <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/" />
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
@@ -817,10 +637,11 @@
         </option>
       </method>
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="GWT Configuration.ClientCodeTester" />
       <item index="1" class="java.lang.String" itemvalue="Google AppEngine Dev Server.AppEngine Dev" />
       <item index="2" class="java.lang.String" itemvalue="Tomcat Server.GWT Client Test" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.ServletTests.testAll" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -870,27 +691,27 @@
     </servers>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1479" y="-168" width="1920" height="874" extended-state="0" />
+    <frame x="1443" y="-180" width="1920" height="874" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34303534" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3425926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Phing Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32994652" sideWeight="0.6711479" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.399137" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3981289" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901832" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33597884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33575884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32994652" sideWeight="0.66402113" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32994652" sideWeight="0.6574074" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41931218" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Persistence" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1021,11 +842,6 @@
         <state line="56" column="50" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/UserAccount.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="325" column="23" selection-start="9856" selection-end="9856" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/SendAListDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="138" column="41" selection-start="5254" selection-end="5254" vertical-scroll-proportion="0.0" />
@@ -1033,23 +849,73 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/TaskList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="49" selection-start="580" selection-end="580" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="12" column="49" selection-start="580" selection-end="580" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/shared/OriginatorOfPersistentChange.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="47" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="9" column="47" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/domain2Objectify/entities/UserAccount.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="375" column="22" selection-start="11717" selection-end="11717" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/signup.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/testfiles/ServletTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="53" selection-start="1175" selection-end="1175" vertical-scroll-proportion="0.66225165">
+        <state line="344" column="38" selection-start="13995" selection-end="13995" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="docComment;class#ServletTests#0" expanded="false" />
+            <element signature="method#setUp#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#tearDown#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#init#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testAll#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testInfoServlet#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#createOwner#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testCreateMultipleLists#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testCreateMultipleTasks#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testRenameTask#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testDeleteTask#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testRenameList#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testDeleteList#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testInvitationSending#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testMultipleViewInvitations#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testUpgradeToEdit#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#testInvitationCopy#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#transactionWithFile#0;class#ServletTests#0" expanded="false" />
+            <element signature="docComment;method#doPostWithThisData#0;class#ServletTests#0" expanded="false" />
+            <element signature="method#doPostWithThisData#0;class#ServletTests#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/login.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="988" selection-end="988" vertical-scroll-proportion="-15.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/secured/SendAList.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="7" selection-start="1580" selection-end="1580" vertical-scroll-proportion="-9.041667">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/thenaglecode/sendalist/server/servlets/LogoutServlet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="39" selection-start="622" selection-end="622" vertical-scroll-proportion="0.44871795">
           <folding />
         </state>
       </provider>

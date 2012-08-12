@@ -340,11 +340,12 @@ public class ServletTests {
     }
 
     private String getTextFromFile(String fileName) {
+        String filePath = "/src/com/thenaglecode/sendalist/server/testfiles/";
         try {
             File file = new File(".");
             System.out.println("transaction object obtained from...");
-            System.out.println("\t" + file.getCanonicalPath() + "\\src\\com\\thenaglecode\\sendalist\\server\\testfiles\\" + fileName);
-            FileInputStream is = new FileInputStream(file.getCanonicalPath() + "\\src\\com\\thenaglecode\\sendalist\\server\\testfiles\\" + fileName);
+            System.out.println("\t" + file.getCanonicalPath() + filePath + fileName);
+            FileInputStream is = new FileInputStream(file.getCanonicalPath() + filePath + fileName);
             return new Scanner(is).useDelimiter("\\A").next();
         } catch (NoSuchElementException e) {
             return "";

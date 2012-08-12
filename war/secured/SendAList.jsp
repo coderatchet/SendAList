@@ -49,6 +49,9 @@
     });
 </script>
 <!-- Insert the navbar element somewhere in the HTML page -->
-<body><div id="navbar"></div></body>
+<body>
+<div style="width: 320px; height: 290px; margin: 0 auto;">
+    <a id="navbar"></a>
+</div></body>
 
 </html>

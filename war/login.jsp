@@ -22,6 +22,7 @@
 <p>
     Login stupid... \/
 </p>
+
 <div id="navbar" class="centerTable"></div>
 </body>
 </html>
