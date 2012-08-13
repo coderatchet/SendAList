@@ -91,12 +91,12 @@
         <url-pattern>/callback</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>Test</servlet-name>
-        <servlet-class>com.thenaglecode.sendalist.server.servlets.TestServlet</servlet-class>
+        <servlet-name>ACJS</servlet-name>
+        <servlet-class>com.thenaglecode.sendalist.server.servlets.AccountChooserJSServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Test</servlet-name>
-        <url-pattern>/test</url-pattern>
+        <servlet-name>ACJS</servlet-name>
+        <url-pattern>/acjs</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>GitKit</servlet-name>

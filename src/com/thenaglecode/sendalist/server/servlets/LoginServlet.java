@@ -48,6 +48,7 @@ public class LoginServlet extends HttpServlet {
         answer.addProperty("registered", login(email, password)); //handles null params
         out.append(answer.toString());
         out.flush();
+        out.close();
     }
 
     /**

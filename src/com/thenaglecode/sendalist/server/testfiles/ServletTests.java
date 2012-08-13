@@ -3,17 +3,22 @@ package com.thenaglecode.sendalist.server.testfiles;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.JsonObject;
+import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.PostMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
+import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
+import com.thenaglecode.sendalist.server.Constants;
+import com.thenaglecode.sendalist.server.ContextLoader;
 import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.Task;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.TaskList;
 import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 import com.thenaglecode.sendalist.server.domain2Objectify.interfaces.Processable;
 import com.thenaglecode.sendalist.server.domain2Objectify.util.InvitationManager;
+import com.thenaglecode.sendalist.server.servlets.AccountChooserJSServlet;
 import com.thenaglecode.sendalist.server.servlets.InfoServlet;
 import com.thenaglecode.sendalist.server.servlets.TransactionServlet;
 import org.json.JSONArray;
@@ -24,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.Arrays;
@@ -53,8 +59,11 @@ public class ServletTests {
     public void setUp() {
         helper.setUp();
         runner = new ServletRunner();
-        runner.registerServlet("api", TransactionServlet.class.getName());
-        runner.registerServlet("info/*", InfoServlet.class.getName());
+        //we use the strings with the forward slash removed to keep to conventions of the servletUnit methods
+        runner.registerServlet(Constants.SERVLET_URL_TRANSACTION_API.substring(1), TransactionServlet.class.getName());
+        runner.registerServlet(Constants.SERVLET_URL_INFO_API.substring(1), InfoServlet.class.getName());
+        runner.registerServlet(Constants.SERVLET_URL_ACCOUNT_CHOOSER_JAVASCRIPT.substring(1),
+                AccountChooserJSServlet.class.getName());
         sc = runner.newClient();
         info = new JsonObject();
     }
@@ -85,6 +94,7 @@ public class ServletTests {
             testUpgradeToEdit();
             testInvitationCopy();
             testInfoServlet();
+            testAccountChooserJavaScriptServlet();
             testDeleteList();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -97,7 +107,10 @@ public class ServletTests {
 
     private void testInfoServlet() throws IOException, SAXException {
         System.out.println("/****************************/");
-        System.out.println(sc.getResponse("http://www.test.com/info/jared@sendalist.com").getText());
+        String urlString;
+        if(Constants.SERVLET_URL_INFO_API.endsWith("*")) urlString = Constants.SERVLET_URL_INFO_API.substring(0, Constants.SERVLET_URL_INFO_API.length()-2);
+        else urlString = Constants.SERVLET_URL_INFO_API;
+        System.out.println(sc.getResponse("http://test.com" + urlString + "/jared@sendalist.com").getText());
     }
 
     /**  */
@@ -299,6 +312,22 @@ public class ServletTests {
         InvitationManager.getInstance().printState();
     }
 
+    public void testAccountChooserJavaScriptServlet() throws IOException, SAXException {
+        WebRequest request = new GetMethodWebRequest("http://test.com"
+                + Constants.SERVLET_URL_ACCOUNT_CHOOSER_JAVASCRIPT);
+        System.out.println("Servlet response without user: \n" + sc.getResponse(request).getText());
+
+        //and with a logged in user...
+        UserAccount loggedInUser = new UserAccount()
+                .setEmail("someemail@someplace.com")
+                .setDisplayName("lalala")
+                .setPhotoUrl("http://url/for/photo");
+        InvocationContext ic = sc.newInvocation(request);
+        HttpSession session = ic.getRequest().getSession(true);
+        session.setAttribute(ContextLoader.SESSION_USER_KEY, loggedInUser);
+        System.out.println("\n\nServlet response with user: \n" + ic.getServletResponse().getText());
+    }
+
     private JSONObject transactionWithFile(JSONObject requestJson) {
 
         try {
@@ -323,7 +352,8 @@ public class ServletTests {
     private String doPostWithThisData(String data) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data.getBytes());
-            WebRequest request = new PostMethodWebRequest("http://test.com/api", inputStream, "application/json; charset=UTF-8");
+            String urlString = "http://test.com" + Constants.SERVLET_URL_TRANSACTION_API;
+            WebRequest request = new PostMethodWebRequest(urlString, inputStream, "application/json; charset=UTF-8");
             request.setParameter("Content-Type", "application/json");
             WebResponse response = sc.getResponse(request);
             return response.getText();

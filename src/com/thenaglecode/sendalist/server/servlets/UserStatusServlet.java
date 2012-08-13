@@ -1,6 +1,8 @@
 package com.thenaglecode.sendalist.server.servlets;
 
 import com.google.gson.JsonObject;
+import com.thenaglecode.sendalist.server.domain2Objectify.SendAListDAO;
+import com.thenaglecode.sendalist.server.domain2Objectify.entities.UserAccount;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,13 +26,6 @@ import java.util.TreeSet;
  */
 public class UserStatusServlet extends HttpServlet {
 
-    private static Set<String> testValidEmails = new TreeSet<String>();
-
-    static {
-        testValidEmails.add("jarednagle@sendalist.com");
-        testValidEmails.add("aprilnagle@sendalist.com");
-    }
-
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         service(req, resp);
     }
@@ -50,12 +45,14 @@ public class UserStatusServlet extends HttpServlet {
         } else {
             answer.addProperty("registered", checkRegistrationStatus(email));
         }
-        out.append(answer.toString());
+        out.print(answer.toString());
         out.flush();
+        out.close();
     }
 
     private boolean checkRegistrationStatus(final String email) {
-        //todo implement with real user datastore
-        return testValidEmails.contains(email.toLowerCase());
+        SendAListDAO dao = new SendAListDAO();
+        UserAccount user = dao.findUser(email);
+        return user != null;
     }
 }

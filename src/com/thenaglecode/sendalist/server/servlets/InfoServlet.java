@@ -74,6 +74,7 @@ public class InfoServlet extends HttpServlet {
         res.setCharacterEncoding("UTF-8");
         writer.write(whole);
         writer.flush();
+        writer.close();
     }
 
     private void returnJson(HttpServletResponse res, JSONObject json) throws IOException {
@@ -84,5 +85,6 @@ public class InfoServlet extends HttpServlet {
         res.setCharacterEncoding("UTF-8");
         writer.write(whole);
         writer.flush();
+        writer.close();
     }
 }

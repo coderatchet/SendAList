@@ -1,7 +1,0 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
-        <g:Label text="Registrations"/>
-    </g:HTMLPanel>
-</ui:UiBinder>
-        <!-- Will have the usually data entry form in this screen -->
