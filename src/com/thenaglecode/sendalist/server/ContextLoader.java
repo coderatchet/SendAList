@@ -18,11 +18,11 @@ import javax.servlet.ServletContextListener;
  */
 public class ContextLoader implements ServletContextListener {
 
-    public static final String GOOGLE_API_KEY = "AIzaSyCk5yd7Qt3vQGAuXaUpeLdD2yKgx5enmis";
-    public static final String SESSION_USER_KEY = "sal_login_acc";
-    public static final String SESSION_IDP_ASSERT = "sal_idp_assert";
-    public static final String HOME_URL = "/secured/SendAList.jsp";
-    public static final String SIGNUP_URL = "/signup.jsp";
+    public static final String GOOGLE_API_KEY = Constants.GOOGLE_API_KEY;
+    public static final String SESSION_USER_KEY = Constants.SESSION_USER_KEY;
+    public static final String SESSION_IDP_ASSERT = Constants.SESSION_IDP_ASSERT;
+    public static final String HOME_URL = Constants.HOME_URL;
+    public static final String SIGNUP_URL = Constants.SIGNUP_URL;
 
     @Override
     public void contextDestroyed(ServletContextEvent evt) {

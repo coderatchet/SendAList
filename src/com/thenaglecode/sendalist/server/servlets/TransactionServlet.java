@@ -96,6 +96,7 @@ public class TransactionServlet extends HttpServlet {
             res.setContentType("application/json");
             writer.append(getReturnData(responses, isPrettyJson));
             res.flushBuffer();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
